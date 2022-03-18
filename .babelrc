@@ -1,0 +1,21 @@
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    ["module-resolver", {
+      "root": ["./src"],
+      "alias": {
+        "@classes": "./src/classes",
+        "@lib": "./src/lib",
+        "@api": "./src/api",
+        "@validator": "./src/api/classes/validator/ProductValidator",
+        "@constants": "./src/constants",
+        "@config": "./src/config",
+        "@controllers": "./src/api/controllers",
+        "@cron": "./src/cronJobs/index",
+        "@models": "./src/models/index",
+        "@routes": "./src/api/routes"
+      }
+    }]
+  ]
+}
