@@ -83,12 +83,14 @@ class Model {
 	}
 	
 	static _whereQuery(whereFilter, initialIndex = 0) {
-		const criteriaANDArray = [];
+		const criteria = {
+			AND: []
+		}
 		const { attributeValues, attributeKeys, attributeValueParams } = this._attributeArrays(whereFilter, initialIndex);
 		attributeKeys.forEach((name, index) => {
-			criteriaANDArray.push(`${name} = ${attributeValueParams[index]}`);
+			criteria.AND.push(`${name} = ${attributeValueParams[index]}`);
 		});
-		const query = `WHERE ${criteriaANDArray.join(' AND ')}`;
+		const query = `WHERE ${criteria.AND.join(' AND ')}`;
 		return {
 			query,
 			values: attributeValues
