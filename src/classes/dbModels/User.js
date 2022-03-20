@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 import Model from '@classes/dbModels/Abstract/Model';
 import dbClient from '@lib/dbClient';
-import { USER_PASSWORD_SALT_ROUNDS, USER_TOKEN_EXPIRES_HOURS, USER_TOKEN_SECRET_KEY } from '@config/env';
+import { USER_PASSWORD_SALT_ROUNDS, USER_TOKEN_EXPIRES_HOURS, USER_TOKEN_SECRET_KEY, NODE_ENV } from '@config/env';
 
 class User extends Model {
 	
@@ -45,13 +45,34 @@ class User extends Model {
 	static async decodeToken(token) {
 		return new Promise((resolve, reject) => {
 			jwt.verify(token, USER_TOKEN_SECRET_KEY, (err, decoded) => {
-				if(err) {
-					reject(err)
+				if (err) {
+					reject(err);
 				} else {
-					resolve(decoded)
+					resolve(decoded);
 				}
 			});
-		})
+		});
+	}
+	
+	static async findByToken(token) {
+		try {
+			const { login } = await this.decodeToken(token);
+			const users = await this.find({
+				where: {
+					login
+				}
+			});
+			if (users.length) {
+				return users[0];
+			} else {
+				return null;
+			}
+		} catch (error) {
+			if(NODE_ENV === 'development') {
+				console.error(error)
+			}
+			return null;
+		}
 	}
 }
 
