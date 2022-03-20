@@ -42,6 +42,11 @@ class Model {
 		return rows;
 	}
 	
+	static async deleteById(id) {
+		const query = `DELETE FROM ${this._tableName} WHERE id = $1 RETURNING *`;
+		await this._dbClient.query(query, [id]);
+	}
+	
 	static _attributeArrays(attributes) {
 		const attributeKeys = [];
 		const attributeValueParams = [];

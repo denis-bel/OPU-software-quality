@@ -22,4 +22,3 @@ app.get('/test', (req, res) => {
 app.listen(API_PORT, () => {
 	console.log(`Server started on port: ${API_PORT}`);
 });
-
