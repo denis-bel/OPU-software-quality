@@ -16,7 +16,11 @@ class Model {
 	static async findById(id) {
 		const query = `SELECT * FROM "${this._tableName}" WHERE id = $1`;
 		const { rows } = await this._dbClient.query(query, [id]);
-		return rows;
+		if(rows.length) {
+			return rows[0]
+		} else {
+			return null;
+		}
 	}
 	
 	static async create(attributes) {
