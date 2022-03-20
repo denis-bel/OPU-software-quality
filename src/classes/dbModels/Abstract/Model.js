@@ -13,11 +13,21 @@ class Model {
 		return rows;
 	}
 	
+	static async find(filter) {
+		const { query: whereQuery, values } = this._whereQuery(filter.where);
+		const query = `
+			SELECT * FROM "${this._tableName}"
+			${whereQuery}
+			`;
+		const { rows } = await this._dbClient.query(query, values);
+		return rows;
+	}
+	
 	static async findById(id) {
 		const query = `SELECT * FROM "${this._tableName}" WHERE id = $1`;
 		const { rows } = await this._dbClient.query(query, [id]);
-		if(rows.length) {
-			return rows[0]
+		if (rows.length) {
+			return rows[0];
 		} else {
 			return null;
 		}
@@ -57,19 +67,32 @@ class Model {
 		await this._dbClient.query(query, [id]);
 	}
 	
-	static _attributeArrays(attributes) {
+	static _attributeArrays(attributes, initialIndex = 0) {
 		const attributeKeys = [];
 		const attributeValueParams = [];
 		const attributeValues = [];
 		
 		const attributeEntries = Object.entries(attributes);
 		attributeEntries.forEach(([key, value], index) => {
-			attributeValueParams.push(`$${index + 1}`);
+			attributeValueParams.push(`$${index + 1 + initialIndex}`);
 			attributeKeys.push(`"${key}"`);
 			attributeValues.push(value);
 		});
 		
 		return { attributeKeys, attributeValues, attributeValueParams };
+	}
+	
+	static _whereQuery(whereFilter, initialIndex = 0) {
+		const criteriaANDArray = [];
+		const { attributeValues, attributeKeys, attributeValueParams } = this._attributeArrays(whereFilter, initialIndex);
+		attributeKeys.forEach((name, index) => {
+			criteriaANDArray.push(`${name} = ${attributeValueParams[index]}`);
+		});
+		const query = `WHERE ${criteriaANDArray.join(' AND ')}`;
+		return {
+			query,
+			values: attributeValues
+		};
 	}
 }
 

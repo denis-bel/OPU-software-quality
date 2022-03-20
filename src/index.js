@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import { API_PORT, NODE_ENV } from '@config/env';
-import User from '@classes/dbModels/User';
 
 const app = express();
 
