@@ -20,7 +20,25 @@ class Model {
 			VALUES(${attributeValueParams.join(', ')})
 			RETURNING *
 			`;
+		
 		const { rows } = await this._dbClient.query(query, attributeValues);
+		return rows;
+	}
+	
+	static async updateById(attributes, id) {
+		const { attributeKeys, attributeValues } = this._attributeArrays(attributes);
+		const keyValueQueries = [];
+		attributeKeys.forEach((key, index) => {
+			keyValueQueries.push(`${key} = $${index + 1}`);
+		});
+		
+		const query = `
+			UPDATE "${this._tableName}"
+			SET ${keyValueQueries.join(', ')}
+			WHERE id = $${attributeValues.length + 1}
+			RETURNING *
+			`;
+		const { rows } = await this._dbClient.query(query, [...attributeValues, id]);
 		return rows;
 	}
 	
