@@ -46,10 +46,10 @@ class Model {
 	}
 	
 	static async updateById(attributes, id) {
-		const { attributeKeys, attributeValues } = this._attributeArrays(attributes);
+		const { attributeKeys, attributeValues, attributeValueParams } = this._attributeArrays(attributes);
 		const keyValueQueries = [];
 		attributeKeys.forEach((key, index) => {
-			keyValueQueries.push(`${key} = $${index + 1}`);
+			keyValueQueries.push(`${key} = ${attributeValueParams[index]}`);
 		});
 		
 		const query = `
