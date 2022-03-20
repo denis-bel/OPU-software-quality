@@ -15,10 +15,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "${API_PORT}:${API_PORT}"
     volumes:
       - "./src:/usr/src/app/src"
     links:
       - "postgres:postgres"
     depends_on:
       - postgres
+    env_file: .env
