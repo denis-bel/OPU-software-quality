@@ -1,14 +1,15 @@
 import express from 'express';
 import path from 'path';
-import cors from 'cors'
+import cors from 'cors';
+import User from '@classes/dbModels/User';
 import { API_PORT, NODE_ENV } from '@config/env';
-import dbClient from '@lib/dbClient';
+
 const app = express();
 
-if(NODE_ENV === 'development') {
-	app.use(cors())
+if (NODE_ENV === 'development') {
+	app.use(cors());
 }
-app.use(express.json())
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '../front')));
 
 app.get('/', (req, res) => {
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-	res.send('Test')
+	res.send('Test');
 });
 
 
@@ -24,4 +25,5 @@ app.listen(API_PORT, () => {
 	console.log(`Server started on port: ${API_PORT}`);
 });
 
-dbClient.query('SELECT * FROM users').then(console.log);
+User.findALl().then(console.log)
+
