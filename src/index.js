@@ -1,7 +1,8 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors'
-import { API_PORT, NODE_ENV } from './config/env';
+import { API_PORT, NODE_ENV } from '@config/env';
+import dbClient from '@lib/dbClient';
 const app = express();
 
 if(NODE_ENV === 'development') {
@@ -21,4 +22,6 @@ app.get('/test', (req, res) => {
 
 app.listen(API_PORT, () => {
 	console.log(`Server started on port: ${API_PORT}`);
-})
+});
+
+dbClient.query('SELECT * FROM users').then(console.log);

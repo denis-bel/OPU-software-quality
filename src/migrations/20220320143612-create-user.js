@@ -1,7 +1,10 @@
 const { USER_ROLE_ADMIN, USER_ROLE_USER, USER_ROLE_SUPER_ADMIN } = require('@constants/User');
+
+const tableName = 'users'
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable(tableName, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -32,6 +35,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable(tableName);
   }
 };
