@@ -7,9 +7,15 @@ class Model {
 		this._dbClient = dbClient;
 	}
 	
-	static async findALl() {
+	static async findAll() {
 		const query = `SELECT * FROM "${this._tableName}"`;
 		const { rows } = await this._dbClient.query(query);
+		return rows;
+	}
+	
+	static async findById(id) {
+		const query = `SELECT * FROM "${this._tableName}" WHERE id = $1`;
+		const { rows } = await this._dbClient.query(query, [id]);
 		return rows;
 	}
 	
@@ -43,7 +49,7 @@ class Model {
 	}
 	
 	static async deleteById(id) {
-		const query = `DELETE FROM ${this._tableName} WHERE id = $1 RETURNING *`;
+		const query = `DELETE FROM ${this._tableName} WHERE id = $1`;
 		await this._dbClient.query(query, [id]);
 	}
 	
