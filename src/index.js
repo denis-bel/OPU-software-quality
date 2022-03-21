@@ -3,6 +3,7 @@ import path from 'path';
 import cors from 'cors';
 import authRouter from '@lib/routers/auth';
 import { API_PORT, NODE_ENV } from '@config/env';
+import errorHandler from '@lib/middlewars/errorHandler';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(authRouter);
+app.use(errorHandler);
 
 app.listen(API_PORT, () => {
 	console.log(`Server started on port: ${API_PORT}`);
