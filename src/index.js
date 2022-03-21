@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import authRouter from '@lib/routers/auth';
 import { API_PORT, NODE_ENV } from '@config/env';
 
 const app = express();
@@ -15,9 +16,7 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../front', 'index.html'));
 });
 
-app.get('/test', (req, res) => {
-	res.send('Test');
-});
+app.use(authRouter);
 
 app.listen(API_PORT, () => {
 	console.log(`Server started on port: ${API_PORT}`);
