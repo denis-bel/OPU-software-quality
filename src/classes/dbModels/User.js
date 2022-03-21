@@ -45,11 +45,11 @@ class User extends Model {
 	}
 	
 	/**
-	 * This method creates JWT token with provided data and returns the token
+	 * This method generates JWT token with provided data and returns the token
 	 * @param {Object} data - data
 	 * @return {Promise<String>} - JWT token
 	 */
-	static async createToken(data) {
+	static async generateToken(data) {
 		return new Promise((resolve, reject) => {
 			jwt.sign(data, USER_TOKEN_SECRET_KEY, { expiresIn: `${USER_TOKEN_EXPIRES_HOURS}h` }, (err, token) => {
 				if (err) {
@@ -84,7 +84,6 @@ class User extends Model {
 	 * @return {Promise<Object>}
 	 */
 	static async findByToken(token) {
-		let user = null;
 		try {
 			const { login } = await this.decodeToken(token);
 			const users = await this.find({
@@ -93,14 +92,15 @@ class User extends Model {
 				}
 			});
 			if (users.length) {
-				user = users[0];
+				return users[0];
 			}
+			return null
 		} catch (error) {
 			if (NODE_ENV === 'development') {
 				console.error(error);
 			}
+			return null;
 		}
-		return user;
 	}
 }
 

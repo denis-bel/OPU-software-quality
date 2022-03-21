@@ -70,11 +70,10 @@ class Model {
 			LIMIT 1
 			`;
 		const { rows } = await this._dbClient.query(query, values);
-		let resultRow = null;
 		if (rows.length) {
-			resultRow = rows[0];
+			return rows[0];
 		}
-		return resultRow;
+		return null;
 	}
 	
 	/**
@@ -85,11 +84,10 @@ class Model {
 	static async findById(id) {
 		const query = `SELECT * FROM "${this._tableName}" WHERE id = $1`;
 		const { rows } = await this._dbClient.query(query, [id]);
-		let resultRow = null;
 		if (rows.length) {
-			resultRow = rows[0];
+			return rows[0];
 		}
-		return resultRow;
+		return null;
 		
 	}
 	
