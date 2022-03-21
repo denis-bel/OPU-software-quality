@@ -4,8 +4,16 @@ import Model from '@classes/dbModels/Abstract/Model';
 import dbClient from '@lib/dbClient';
 import { NODE_ENV, USER_PASSWORD_SALT_ROUNDS, USER_TOKEN_EXPIRES_HOURS, USER_TOKEN_SECRET_KEY } from '@config/env';
 
+/**
+ * This class represents User object in the database
+ */
 class User extends Model {
 	
+	/**
+	 * This method takes plain password and returns hashed password
+	 * @param {String} password - password
+	 * @returns {Promise<String>} - hashed password
+	 */
 	static async hashPassword(password) {
 		return new Promise((resolve, reject) => {
 			bcrypt.hash(password, USER_PASSWORD_SALT_ROUNDS, (err, hash) => {
@@ -18,6 +26,12 @@ class User extends Model {
 		});
 	}
 	
+	/**
+	 * This method compare the provided password with hashed password. It returns true if passwords are equal
+	 * @param {String} plainPassword - plain password
+	 * @param hashedPassword - hashed password
+	 * @return {Promise<Boolean>}
+	 */
 	static async isPasswordValid(plainPassword, hashedPassword) {
 		return new Promise((resolve, reject) => {
 			bcrypt.compare(plainPassword, hashedPassword, (err, result) => {
@@ -30,6 +44,11 @@ class User extends Model {
 		});
 	}
 	
+	/**
+	 * This method creates JWT token with provided data and returns the token
+	 * @param {Object} data - data
+	 * @return {Promise<String>} - JWT token
+	 */
 	static async createToken(data) {
 		return new Promise((resolve, reject) => {
 			jwt.sign(data, USER_TOKEN_SECRET_KEY, { expiresIn: `${USER_TOKEN_EXPIRES_HOURS}h` }, (err, token) => {
@@ -42,6 +61,11 @@ class User extends Model {
 		});
 	}
 	
+	/**
+	 * This method decodes the token and returns decoded data
+	 * @param {String} token - JWT token
+	 * @return {Promise<Object>} - decoded data
+	 */
 	static async decodeToken(token) {
 		return new Promise((resolve, reject) => {
 			jwt.verify(token, USER_TOKEN_SECRET_KEY, (err, decoded) => {
@@ -54,6 +78,11 @@ class User extends Model {
 		});
 	}
 	
+	/**
+	 * This method find user by JWT authorization token. It returns null if user not found
+	 * @param {String} token
+	 * @return {Promise<Object>}
+	 */
 	static async findByToken(token) {
 		let user = null;
 		try {
