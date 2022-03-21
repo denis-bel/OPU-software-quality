@@ -8,7 +8,9 @@
         "@classes": "./src/classes",
         "@lib": "./src/lib",
         "@constants": "./src/constants",
-        "@config": "./src/config"
+        "@config": "./src/config",
+        "@routers": "./src/routers",
+        "@middlewares": "./src/middlewares"
       }
     }]
   ]

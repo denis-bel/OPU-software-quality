@@ -1,9 +1,9 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import authRouter from '@lib/routers/auth';
+import authRouter from '@routers/auth';
 import { API_PORT, NODE_ENV } from '@config/env';
-import errorHandler from '@lib/middlewars/errorHandler';
+import errorHandler from '@middlewares/errorHandler';
 
 const app = express();
 

@@ -1,6 +1,7 @@
 import User from '@classes/dbModels/User';
 import { HTTP_CODE_FORBIDDEN } from '@constants/httpCode';
 import ExpressError from '@classes/ExpressError';
+import isLoginDataValid from '@lib/validator/checkers/login'
 
 export default async (req, res, next) => {
 	const { login } = req.body;
@@ -19,5 +20,11 @@ export default async (req, res, next) => {
 		return res.json({ token });
 	}
 	return next(new ExpressError('Invalid login or password', HTTP_CODE_FORBIDDEN));
-	
+}
+
+export function validateLoginData(req, res, next) {
+	if(isLoginDataValid(req.body)) {
+		return next();
+	}
+	return next(new ExpressError('Invalid login or password', HTTP_CODE_FORBIDDEN));
 }
