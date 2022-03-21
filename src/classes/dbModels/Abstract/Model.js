@@ -37,9 +37,14 @@ class Model {
 	}
 	
 	/**
+	 * A filter to search with
+	 * @typedef {Object} Filter
+	 * @property {Object} where - where clause with attributes exact values
+	 */
+	
+	/**
 	 * This method finds table rows with filter
-	 * @param {Object} filter - filter
-	 * @param {Object} filter.where - attributes with exact values
+	 * @param {Filter} filter - filter
 	 * @return {Promise<Object[]>}
 	 */
 	static async find(filter) {
@@ -50,6 +55,26 @@ class Model {
 			`;
 		const { rows } = await this._dbClient.query(query, values);
 		return rows;
+	}
+	
+	/**
+	 * This method return first found table row with provided filter
+	 * @param {Filter} filter - filter
+	 * @return {Promise<Object|null>}
+	 */
+	static async findOne(filter) {
+		const { query: whereQuery, values } = this._whereQuery(filter.where);
+		const query = `
+			SELECT * FROM "${this._tableName}"
+			${whereQuery}
+			LIMIT 1
+			`;
+		const { rows } = await this._dbClient.query(query, values);
+		let resultRow = null;
+		if (rows.length) {
+			resultRow = rows[0];
+		}
+		return resultRow;
 	}
 	
 	/**
