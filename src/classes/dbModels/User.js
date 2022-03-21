@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Model from '@classes/dbModels/Abstract/Model';
 import dbClient from '@lib/dbClient';
-import { USER_PASSWORD_SALT_ROUNDS, USER_TOKEN_EXPIRES_HOURS, USER_TOKEN_SECRET_KEY, NODE_ENV } from '@config/env';
+import { NODE_ENV, USER_PASSWORD_SALT_ROUNDS, USER_TOKEN_EXPIRES_HOURS, USER_TOKEN_SECRET_KEY } from '@config/env';
 
 class User extends Model {
 	
@@ -55,6 +55,7 @@ class User extends Model {
 	}
 	
 	static async findByToken(token) {
+		let user = null;
 		try {
 			const { login } = await this.decodeToken(token);
 			const users = await this.find({
@@ -63,16 +64,14 @@ class User extends Model {
 				}
 			});
 			if (users.length) {
-				return users[0];
-			} else {
-				return null;
+				user = users[0];
 			}
 		} catch (error) {
-			if(NODE_ENV === 'development') {
-				console.error(error)
+			if (NODE_ENV === 'development') {
+				console.error(error);
 			}
-			return null;
 		}
+		return user;
 	}
 }
 
