@@ -25,7 +25,7 @@ async function getUser(req, res, next) {
 	return next();
 }
 
-async function login(req, res, next) {
+async function generateToken(req, res, next) {
 	const { user } = req;
 	const { password: inputPassword } = req.body;
 	const passwordValid = await User.isPasswordValid(inputPassword, user.password);
@@ -36,4 +36,4 @@ async function login(req, res, next) {
 	return next(new ExpressError('Invalid login or password', HTTP_CODE_FORBIDDEN));
 }
 
-export default [validateLoginData, middlewareWrapper(getUser), middlewareWrapper(login)];
+export default [validateLoginData, middlewareWrapper(getUser), middlewareWrapper(generateToken)];
