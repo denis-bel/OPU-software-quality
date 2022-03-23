@@ -18,6 +18,7 @@ services:
       - "${API_PORT}:${API_PORT}"
     volumes:
       - "./src:/usr/src/app/src"
+      - "./logs:/usr/src/app/logs"
     links:
       - "postgres:postgres"
     depends_on:
