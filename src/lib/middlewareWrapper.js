@@ -1,12 +1,12 @@
-import ExpressError from '@classes/ExpressError';
-import { NODE_ENV } from '@config/env';
+import logger from '@lib/logger';
+import { HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 
 export default middleware => (req, res, next) => {
 	return middleware(req, res, next)
 		.catch(error => {
-			if (NODE_ENV === 'development') {
-				console.error(error);
-			}
-			next(new ExpressError('Internal server error'));
+			logger.error(error);
+			const expressError = new Error('Internal Server Error');
+			expressError.status = HTTP_CODE_SERVER_ERROR;
+			next(expressError);
 		});
 }
