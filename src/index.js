@@ -1,21 +1,15 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import onFinished from 'on-finished';
-
 import authRouter from '@routers/auth';
 import { API_PORT, NODE_ENV } from '@config/env';
 import errorHandler from '@middlewares/errorHandler';
 import logger from '@lib/logger';
+import log from '@middlewares/log';
 
 const app = express();
 
-app.use((req, res, next) => {
-	onFinished(res, () => {
-		logger.info(`${req.method} ${req.originalUrl} ${res.statusCode}`);
-	});
-	next();
-});
+app.use(log);
 
 if (NODE_ENV === 'development') {
 	app.use(cors());
