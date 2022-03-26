@@ -5,11 +5,12 @@ import middlewareWrapper from '@lib/middlewareWrapper';
 
 function validateLoginData(req, res, next) {
 	if (isLoginDataValid(req.body)) {
-		return next();
+		next();
+	} else {
+		res.status(HTTP_CODE_FORBIDDEN).json({
+			message: 'Invalid login or password'
+		});
 	}
-	return res.status(HTTP_CODE_FORBIDDEN).json({
-		message: 'Invalid login or password'
-	});
 }
 
 async function getUser(req, res, next) {
@@ -19,13 +20,14 @@ async function getUser(req, res, next) {
 			login
 		}
 	});
-	if (!user) {
-		return res.status(HTTP_CODE_FORBIDDEN).json({
+	if (user) {
+		req.user = user;
+		next();
+	} else {
+		res.status(HTTP_CODE_FORBIDDEN).json({
 			message: 'Invalid login or password'
 		});
 	}
-	req.user = user;
-	return next();
 }
 
 async function generateToken(req, res) {
@@ -34,11 +36,12 @@ async function generateToken(req, res) {
 	const passwordValid = await User.isPasswordValid(inputPassword, user.password);
 	if (passwordValid) {
 		const token = await User.generateToken({ login: user.login });
-		return res.json({ token });
+		res.json({ token });
+	} else {
+		res.status(HTTP_CODE_FORBIDDEN).json({
+			message: 'Invalid login or password'
+		});
 	}
-	return res.status(HTTP_CODE_FORBIDDEN).json({
-		message: 'Invalid login or password'
-	});
 }
 
 export default [validateLoginData, middlewareWrapper(getUser), middlewareWrapper(generateToken)];
