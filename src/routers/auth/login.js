@@ -36,7 +36,8 @@ async function generateToken(req, res) {
 	const passwordValid = await User.isPasswordValid(inputPassword, user.password);
 	if (passwordValid) {
 		const token = await User.generateToken({ login: user.login });
-		res.json({ token });
+		const { role, login } = user;
+		res.json({ token, role, login });
 	} else {
 		res.status(HTTP_CODE_FORBIDDEN).json({
 			message: 'Invalid login or password'
