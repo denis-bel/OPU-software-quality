@@ -1,6 +1,8 @@
 import express from 'express';
 import loginMiddlewares from './login';
 import registerMiddlewares from '@routers/auth/register';
+import getUser from '@middlewares/getUser';
+import roleAccess from '@middlewares/roleAccess';
 
 const router = express.Router();
 
@@ -10,5 +12,9 @@ router.get('/test', (req, res) => {
 
 router.post('/login', ...loginMiddlewares);
 router.post('/register', ...registerMiddlewares);
+
+router.get('/auth', getUser, roleAccess(['admin', 'user']), (req, res) => {
+	res.send('Auth');
+});
 
 export default router;
