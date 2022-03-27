@@ -2,7 +2,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Model from '@classes/dbModels/Abstract/Model';
 import dbClient from '@lib/dbClient';
-import { NODE_ENV, USER_PASSWORD_SALT_ROUNDS, USER_TOKEN_EXPIRES_HOURS, USER_TOKEN_SECRET_KEY } from '@config/env';
+import { USER_PASSWORD_SALT_ROUNDS, USER_TOKEN_EXPIRES_HOURS, USER_TOKEN_SECRET_KEY } from '@config/env';
+import logger from '@lib/logger';
 
 /**
  * This class represents User object in the database
@@ -94,16 +95,23 @@ class User extends Model {
 			if (users.length) {
 				return users[0];
 			}
-			return null
+			return null;
 		} catch (error) {
-			if (NODE_ENV === 'development') {
-				console.error(error);
-			}
+			logger.error(error);
 			return null;
 		}
 	}
+	
+	static async create(userData) {
+		const { password } = userData;
+		return await super.create({
+			...userData,
+			password: await this.hashPassword(password)
+		});
+	}
+	
 }
 
-User.initialize('users', dbClient);
+User.initialize({ tableName: 'users', dbClient, withTimeStamps: true });
 
 export default User;

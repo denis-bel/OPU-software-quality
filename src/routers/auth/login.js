@@ -4,7 +4,8 @@ import isLoginDataValid from '@lib/validator/checkers/login';
 import middlewareWrapper from '@lib/middlewareWrapper';
 
 function validateLoginData(req, res, next) {
-	if (isLoginDataValid(req.body)) {
+	const { login, password } = req.body;
+	if (isLoginDataValid({ login, password })) {
 		next();
 	} else {
 		res.status(HTTP_CODE_FORBIDDEN).json({

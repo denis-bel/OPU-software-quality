@@ -18,12 +18,15 @@ class Model {
 	
 	/**
 	 * This method initializes database table model
-	 * @param {String} tableName - table mane
-	 * @param {Pool} dbClient - client to execute database query
+	 * @param {Object} data
+	 * @param {String} data.tableName - table mane
+	 * @param {Pool} data.dbClient - client to execute database query
+	 * @param {Boolean} data.withTimeStamps - if true, model will have createdAt and updatedAt fields
 	 */
-	static initialize(tableName, dbClient) {
+	static initialize({ tableName, dbClient, withTimeStamps = false }) {
 		this._tableName = tableName;
 		this._dbClient = dbClient;
+		this._withTimeStamps = withTimeStamps;
 	}
 	
 	/**
@@ -94,9 +97,13 @@ class Model {
 	/**
 	 * This method created the table row with provided attributes and returns created row.
 	 * @param {Object} attributes - attributes
-	 * @return {Promise<Object>}
+	 * @return {Promise<Object|null>}
 	 */
 	static async create(attributes) {
+		if(this._withTimeStamps) {
+			attributes.createdAt = new Date();
+			attributes.updatedAt = new Date();
+		}
 		const { attributeKeys, attributeValueParams, attributeValues } = this._attributeArrays(attributes);
 		const query = `
 			INSERT INTO "${this._tableName}"(${attributeKeys.join(', ')})
@@ -105,7 +112,10 @@ class Model {
 			`;
 		
 		const { rows } = await this._dbClient.query(query, attributeValues);
-		return rows;
+		if(rows.length) {
+			return rows[0];
+		}
+		return null;
 	}
 	
 	/**
@@ -115,6 +125,9 @@ class Model {
 	 * @return {Promise<Object>}
 	 */
 	static async updateById(attributes, id) {
+		if(this._withTimeStamps) {
+			attributes.updatedAt = new Date();
+		}
 		const { attributeKeys, attributeValues, attributeValueParams } = this._attributeArrays(attributes);
 		const keyValueQueries = [];
 		attributeKeys.forEach((key, index) => {
