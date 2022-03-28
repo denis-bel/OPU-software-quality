@@ -31,10 +31,11 @@ class Model {
 	
 	/**
 	 * This method finds all table rows.
+	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object[]>}
 	 */
-	static async findAll() {
-		const query = `SELECT * FROM "${this._tableName}"`;
+	static async findAll(attributes) {
+		const query = `SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`;
 		const { rows } = await this._dbClient.query(query);
 		return rows;
 	}
@@ -48,12 +49,13 @@ class Model {
 	/**
 	 * This method finds table rows with filter
 	 * @param {Filter} filter - filter
+	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object[]>}
 	 */
-	static async find(filter) {
+	static async find(filter, attributes) {
 		const { query: whereQuery, values } = this._whereQuery(filter.where);
 		const query = `
-			SELECT * FROM "${this._tableName}"
+			SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"
 			${whereQuery}
 			`;
 		const { rows } = await this._dbClient.query(query, values);
@@ -63,12 +65,13 @@ class Model {
 	/**
 	 * This method return first found table row with provided filter
 	 * @param {Filter} filter - filter
+	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object|null>}
 	 */
-	static async findOne(filter) {
+	static async findOne(filter, attributes) {
 		const { query: whereQuery, values } = this._whereQuery(filter.where);
 		const query = `
-			SELECT * FROM "${this._tableName}"
+			SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"
 			${whereQuery}
 			LIMIT 1
 			`;
@@ -82,10 +85,11 @@ class Model {
 	/**
 	 * This method finds table row by id field
 	 * @param {String|Number} id - row id
+	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object|null>}
 	 */
-	static async findById(id) {
-		const query = `SELECT * FROM "${this._tableName}" WHERE id = $1`;
+	static async findById(id, attributes) {
+		const query = `SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}" WHERE id = $1`;
 		const { rows } = await this._dbClient.query(query, [id]);
 		if (rows.length) {
 			return rows[0];
@@ -198,6 +202,10 @@ class Model {
 			query,
 			values: attributeValues
 		};
+	}
+	
+	static _buildAttributesQuery(attributes) {
+		return attributes ? attributes.map(attr => `"${attr}"`).join(', ') : '*';
 	}
 }
 

@@ -1,5 +1,8 @@
 version: "3"
 
+volumes:
+  DB-course-api-postgres:
+
 services:
   postgres:
     image: postgres:latest
@@ -7,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - "./data/postgres:/var/lib/postgresql/data"
+      - "DB-course-api-postgres:/var/lib/postgresql/data"
     env_file: .env
 
   api:
