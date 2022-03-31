@@ -39,10 +39,12 @@ async function createUser(req, res) {
 		password,
 		role: USER_ROLE_USER
 	});
+	const token = await User.generateToken({ login: user.login });
 	res.status(HTTP_CODE_CREATED).json({
 		message: 'User created',
 		login: user.login,
-		role: user.role
+		role: user.role,
+		token
 	});
 }
 
