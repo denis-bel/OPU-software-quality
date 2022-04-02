@@ -13,7 +13,7 @@ router.get('/test', (req, res) => {
 router.post('/login', ...loginMiddlewares);
 router.post('/register', ...registerMiddlewares);
 
-router.get('/auth', authorizeUser, roleAccess(['admin', 'user']), (req, res) => {
+router.get('/auth', authorizeUser, roleAccess(['admin', 'user', 'super-admin']), (req, res) => {
 	res.send('Auth');
 });
 

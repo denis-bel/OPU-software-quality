@@ -35,7 +35,7 @@ module.exports = {
     });
     /* eslint-disable no-useless-escape */
     await queryInterface.sequelize.query(`
-      ALTER TABLE ${tableName} ADD constraint proper_login CHECK (login ~* '^(?=.*[A-Za-z0-9]$)[A-Za-z][A-Za-z\d.-]{0,19}$');
+      ALTER TABLE ${tableName} ADD constraint proper_login CHECK (login ~* '^[a-z0-9_-]{3,16}$');
       `);
   },
   async down(queryInterface) {
