@@ -104,7 +104,7 @@ class Model {
 	 * @return {Promise<Object|null>}
 	 */
 	static async create(attributes) {
-		if(this._withTimeStamps) {
+		if (this._withTimeStamps) {
 			attributes.createdAt = new Date();
 			attributes.updatedAt = new Date();
 		}
@@ -116,7 +116,7 @@ class Model {
 			`;
 		
 		const { rows } = await this._dbClient.query(query, attributeValues);
-		if(rows.length) {
+		if (rows.length) {
 			return rows[0];
 		}
 		return null;
@@ -129,7 +129,7 @@ class Model {
 	 * @return {Promise<Object>}
 	 */
 	static async updateById(attributes, id) {
-		if(this._withTimeStamps) {
+		if (this._withTimeStamps) {
 			attributes.updatedAt = new Date();
 		}
 		const { attributeKeys, attributeValues, attributeValueParams } = this._attributeArrays(attributes);
@@ -151,11 +151,12 @@ class Model {
 	/**
 	 * This method delete the table row by id
 	 * @param {String|Number} id
-	 * @return {Promise<void>}
+	 * @return {Promise<Boolean>} - true if row was deleted
 	 */
 	static async deleteById(id) {
 		const query = `DELETE FROM ${this._tableName} WHERE id = $1`;
-		await this._dbClient.query(query, [id]);
+		const { rowCount } = await this._dbClient.query(query, [id]);
+		return rowCount !== 0;
 	}
 	
 	/**
