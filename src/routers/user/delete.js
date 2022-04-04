@@ -3,7 +3,7 @@ import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_BAD_REQUEST, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 
 async function deleteUser(req, res) {
-	const { id } = req.body;
+	const { id } = req.params;
 	const user = await User.findById(id);
 	if(!user) {
 		return res.status(HTTP_CODE_BAD_REQUEST).json({

@@ -13,6 +13,6 @@ router.use(roleAccess([USER_ROLE_SUPER_ADMIN]));
 
 router.get('/all', ...getAllMiddlewares);
 router.put('/', ...updateMiddlewares);
-router.delete('/', ...deleteMiddlewares);
+router.delete('/:id', ...deleteMiddlewares);
 
 export default router;
