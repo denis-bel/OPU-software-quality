@@ -17,6 +17,13 @@ class Model {
 	static _dbClient;
 	
 	/**
+	 * If true, createdAt and updatedAt fields will be updated automatically
+	 * @type {Boolean}
+	 * @protected
+	 */
+	static _withTimeStamps = false;
+	
+	/**
 	 * This method initializes database table model
 	 * @param {Object} data
 	 * @param {String} data.tableName - table mane
