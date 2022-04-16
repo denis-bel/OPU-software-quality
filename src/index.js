@@ -7,6 +7,7 @@ import { API_PORT, NODE_ENV } from '@config/env';
 import errorHandler from '@middlewares/errorHandler';
 import logger from '@lib/logger';
 import log from '@middlewares/log';
+import userLogRouter from '@routers/userLog';
 
 const app = express();
 
@@ -23,8 +24,9 @@ app.get('/', (req, res) => {
 });
 
 app.use(authRouter);
-app.use('/user', userRouter)
+app.use('/user', userRouter);
 app.use(errorHandler);
+app.use('/userLogs', userLogRouter);
 
 app.listen(API_PORT, () => {
 	logger.info(`Server started on port: ${API_PORT}`);
