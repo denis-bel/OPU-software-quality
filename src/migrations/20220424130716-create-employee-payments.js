@@ -1,4 +1,4 @@
-const tableName = 'worker-payments';
+const tableName = 'employee-payments';
 
 module.exports = {
 	async up(queryInterface, Sequelize) {
@@ -13,12 +13,12 @@ module.exports = {
 				type: Sequelize.FLOAT,
 				allowNull: false
 			},
-			workerId: {
+			employeeId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				onDelete: 'CASCADE',
 				references: {
-					model: 'workers',
+					model: 'employees',
 					key: 'id'
 				}
 			},
