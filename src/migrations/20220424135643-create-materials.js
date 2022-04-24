@@ -14,7 +14,8 @@ module.exports = {
 				allowNull: false
 			},
 			unitFee: {
-				type: Sequelize.FLOAT
+				type: Sequelize.FLOAT,
+				allowNull: false
 			},
 			createdAt: {
 				allowNull: false,
