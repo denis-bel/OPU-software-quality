@@ -13,12 +13,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      roadObjectId: {
+      activityId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         onDelete: 'CASCADE',
         references: {
-          model: 'road-objects',
+          model: 'activities',
           key: 'id'
         }
       },

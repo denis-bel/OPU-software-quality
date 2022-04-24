@@ -15,12 +15,12 @@ module.exports = {
       finishDate: {
         type: Sequelize.DATE
       },
-      roadObjectId: {
+      activityId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         onDelete: 'CASCADE',
         references: {
-          model: 'road-objects',
+          model: 'activities',
           key: 'id'
         }
       },
