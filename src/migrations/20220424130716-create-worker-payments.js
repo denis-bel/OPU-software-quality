@@ -1,4 +1,5 @@
-const tableName = 'worker_payments';
+const tableName = 'worker-payments';
+
 module.exports = {
 	async up(queryInterface, Sequelize) {
 		await queryInterface.createTable(tableName, {
