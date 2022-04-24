@@ -8,6 +8,7 @@ import errorHandler from '@middlewares/errorHandler';
 import logger from '@lib/logger';
 import log from '@middlewares/log';
 import userLogRouter from '@routers/userLog';
+import brigadeRouter from '@routers/brigade';
 
 const app = express();
 
@@ -23,10 +24,12 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../front', 'index.html'));
 });
 
-app.use(authRouter);
+app.use('/', authRouter);
 app.use('/user', userRouter);
-app.use(errorHandler);
 app.use('/userLogs', userLogRouter);
+app.use('/brigade', brigadeRouter);
+
+app.use(errorHandler);
 
 app.listen(API_PORT, () => {
 	logger.info(`Server started on port: ${API_PORT}`);
