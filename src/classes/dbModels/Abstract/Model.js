@@ -65,7 +65,7 @@ class Model {
 	static async find(filter, attributes) {
 		const query = new Query();
 		query.add(`SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`);
-		this._addWhereToQuery(filter.where, query);
+		query.addWhere(filter.where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
@@ -79,7 +79,7 @@ class Model {
 	static async findOne(filter, attributes) {
 		const query = new Query();
 		query.add(`SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`);
-		this._addWhereToQuery(filter.where, query);
+		query.addWhere(filter.where);
 		query.add('LIMIT 1');
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		if (rows.length) {
@@ -164,23 +164,6 @@ class Model {
 		const query = `DELETE FROM ${this._tableName} WHERE id = $1`;
 		const { rowCount } = await this._dbClient.query(query, [id]);
 		return rowCount !== 0;
-	}
-	
-	/**
-	 *
-	 * @param whereFilter
-	 * @param {Query} query
-	 * @private
-	 */
-	static _addWhereToQuery(whereFilter, query) {
-		const criteria = {
-			AND: []
-		};
-		const { keys, values } = keyValues(whereFilter);
-		keys.forEach(name => {
-			criteria.AND.push(`"${name}" = ${query.nextIndex}`);
-		});
-		query.add(`WHERE ${criteria.AND.join(' AND ')}`, values);
 	}
 	
 	static _buildAttributesQuery(attributes) {

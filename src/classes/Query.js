@@ -1,3 +1,5 @@
+import keyValues from '@lib/keyValues';
+
 class Query {
 	_values;
 	_query;
@@ -16,6 +18,17 @@ class Query {
 			throw new Error(`Query values length mismatch, lastIndex: ${this._lastIndex}, values length: ${this._values.length}`);
 		}
 		
+	}
+	
+	addWhere(whereFilter) {
+		const criteria = {
+			AND: []
+		};
+		const { keys, values } = keyValues(whereFilter);
+		keys.forEach(name => {
+			criteria.AND.push(`"${name}" = ${this.nextIndex}`);
+		});
+		this.add(`WHERE ${criteria.AND.join(' AND ')}`, values);
 	}
 	
 	get nextIndex() {
