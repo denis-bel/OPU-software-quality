@@ -63,12 +63,10 @@ class Model {
 	 * @return {Promise<Object[]>}
 	 */
 	static async find(filter, attributes) {
-		const { query: whereQuery, values } = this._whereQuery(filter.where);
-		const query = `
-			SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"
-			${whereQuery}
-			`;
-		const { rows } = await this._dbClient.query(query, values);
+		const query = new Query();
+		query.add(`SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`);
+		this._addWhereToQuery(filter.where, query);
+		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
 	
@@ -81,7 +79,7 @@ class Model {
 	static async findOne(filter, attributes) {
 		const query = new Query();
 		query.add(`SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`);
-		this._addWhereToQuery(filter.where, query)
+		this._addWhereToQuery(filter.where, query);
 		query.add('LIMIT 1');
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		if (rows.length) {
@@ -166,52 +164,6 @@ class Model {
 		const query = `DELETE FROM ${this._tableName} WHERE id = $1`;
 		const { rowCount } = await this._dbClient.query(query, [id]);
 		return rowCount !== 0;
-	}
-	
-	/**
-	 * This method take attribute object and returns arrays with attribute values, keys and
-	 * query params (with the same order)
-	 * @param {Object} attributes - attributes
-	 * @param {Number} [initialIndex=0] - index + 1 from where start parameters indexing
-	 * @return {{attributeValues: *[], attributeValueParams: String[], attributeKeys: String[]}}
-	 * @protected
-	 */
-	static _attributeArrays(attributes, initialIndex = 0) {
-		const attributeKeys = [];
-		const attributeValueParams = [];
-		const attributeValues = [];
-		
-		const attributeEntries = Object.entries(attributes);
-		attributeEntries.forEach(([key, value], index) => {
-			attributeValueParams.push(`$${index + 1 + initialIndex}`);
-			attributeKeys.push(`"${key}"`);
-			attributeValues.push(value);
-		});
-		
-		return { attributeKeys, attributeValues, attributeValueParams };
-	}
-	
-	/**
-	 * This method build 'where' query with provided attributes (with exact equals). It returns query and values
-	 * for database client
-	 * @param {Object} whereFilter - where filter object
-	 * @param {Number} initialIndex - index + 1 from where start parameters indexing
-	 * @return {{query: string, values: *[]}}
-	 * @protected
-	 */
-	static _whereQuery(whereFilter, initialIndex = 0) {
-		const criteria = {
-			AND: []
-		};
-		const { attributeValues, attributeKeys, attributeValueParams } = this._attributeArrays(whereFilter, initialIndex);
-		attributeKeys.forEach((name, index) => {
-			criteria.AND.push(`${name} = ${attributeValueParams[index]}`);
-		});
-		const query = `WHERE ${criteria.AND.join(' AND ')}`;
-		return {
-			query,
-			values: attributeValues
-		};
 	}
 	
 	/**
