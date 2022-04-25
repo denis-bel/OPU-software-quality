@@ -1,3 +1,6 @@
+import Query from '@classes/Query';
+import keyValues from '@lib/keyValues';
+
 /**
  * This is abstract class. It represents database table. It provides basic CRUD operations
  */
@@ -115,14 +118,15 @@ class Model {
 			attributes.createdAt = new Date();
 			attributes.updatedAt = new Date();
 		}
-		const { attributeKeys, attributeValueParams, attributeValues } = this._attributeArrays(attributes);
-		const query = `
-			INSERT INTO "${this._tableName}"(${attributeKeys.join(', ')})
-			VALUES(${attributeValueParams.join(', ')})
+		const { keys, values } = keyValues(attributes);
+		const attributeNames = keys.map(key => `"${key}"`);
+		const query = new Query();
+		query.add(`
+			INSERT INTO "${this._tableName}"(${attributeNames.join(', ')})
+			VALUES(${values.map(() => query.nextIndex).join(', ')})
 			RETURNING *
-			`;
-		
-		const { rows } = await this._dbClient.query(query, attributeValues);
+			`, values);
+		const { rows } = await this._dbClient.query(query.query, query.values);
 		if (rows.length) {
 			return rows[0];
 		}

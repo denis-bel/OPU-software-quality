@@ -9,7 +9,7 @@ class Query {
 		this._lastIndex = 0;
 	}
 	
-	add(query, values) {
+	add(query, values = []) {
 		this._query += query;
 		this._values.push(...values);
 		if (this._lastIndex !== this._values.length) {
@@ -31,3 +31,5 @@ class Query {
 		return this._values;
 	}
 }
+
+export default Query;
