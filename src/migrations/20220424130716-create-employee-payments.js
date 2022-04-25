@@ -10,7 +10,7 @@ module.exports = {
 				type: Sequelize.INTEGER
 			},
 			sum: {
-				type: Sequelize.FLOAT,
+				type: 'decimal(12,2)',
 				allowNull: false
 			},
 			employeeId: {

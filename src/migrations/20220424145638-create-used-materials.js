@@ -10,7 +10,7 @@ module.exports = {
 				type: Sequelize.INTEGER
 			},
 			unitFee: {
-				type: Sequelize.FLOAT
+				type: 'decimal(12,2)'
 			},
 			count: {
 				type: Sequelize.INTEGER,

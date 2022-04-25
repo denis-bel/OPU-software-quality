@@ -14,7 +14,7 @@ module.exports = {
 				allowNull: false
 			},
 			unitFee: {
-				type: Sequelize.FLOAT,
+				type: 'decimal(12,2)',
 				allowNull: false
 			},
 			createdAt: {
