@@ -167,7 +167,7 @@ class Model {
 	}
 	
 	static _buildAttributesQuery(attributes) {
-		return attributes ? attributes.map(attr => `"${attr}"`).join(', ') : '*';
+		return attributes?.length ? attributes.map(attr => `"${attr}"`).join(', ') : '*';
 	}
 }
 
