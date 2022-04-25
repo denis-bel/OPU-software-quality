@@ -143,19 +143,19 @@ class Model {
 		if (this._withTimeStamps) {
 			attributes.updatedAt = new Date();
 		}
-		const { attributeKeys, attributeValues, attributeValueParams } = this._attributeArrays(attributes);
+		const query = new Query();
+		const { keys, values } = keyValues(attributes);
 		const keyValueQueries = [];
-		attributeKeys.forEach((key, index) => {
-			keyValueQueries.push(`${key} = ${attributeValueParams[index]}`);
+		keys.forEach((key) => {
+			keyValueQueries.push(`"${key}" = ${query.nextIndex}`);
 		});
-		
-		const query = `
+		query.add(`
 			UPDATE "${this._tableName}"
 			SET ${keyValueQueries.join(', ')}
-			WHERE id = $${attributeValues.length + 1}
+			WHERE id = ${query.nextIndex}
 			RETURNING *
-			`;
-		const { rows } = await this._dbClient.query(query, [...attributeValues, id]);
+			`, [...values, id]);
+		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows[0];
 	}
 	
