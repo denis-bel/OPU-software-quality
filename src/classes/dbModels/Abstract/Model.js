@@ -79,13 +79,11 @@ class Model {
 	 * @return {Promise<Object|null>}
 	 */
 	static async findOne(filter, attributes) {
-		const { query: whereQuery, values } = this._whereQuery(filter.where);
-		const query = `
-			SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"
-			${whereQuery}
-			LIMIT 1
-			`;
-		const { rows } = await this._dbClient.query(query, values);
+		const query = new Query();
+		query.add(`SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`);
+		this._addWhereToQuery(filter.where, query)
+		query.add('LIMIT 1');
+		const { rows } = await this._dbClient.query(query.query, query.values);
 		if (rows.length) {
 			return rows[0];
 		}
@@ -214,6 +212,23 @@ class Model {
 			query,
 			values: attributeValues
 		};
+	}
+	
+	/**
+	 *
+	 * @param whereFilter
+	 * @param {Query} query
+	 * @private
+	 */
+	static _addWhereToQuery(whereFilter, query) {
+		const criteria = {
+			AND: []
+		};
+		const { keys, values } = keyValues(whereFilter);
+		keys.forEach(name => {
+			criteria.AND.push(`"${name}" = ${query.nextIndex}`);
+		});
+		query.add(`WHERE ${criteria.AND.join(' AND ')}`, values);
 	}
 	
 	static _buildAttributesQuery(attributes) {
