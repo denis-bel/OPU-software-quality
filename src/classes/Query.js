@@ -5,6 +5,10 @@ class Query {
 	_query;
 	_lastIndex;
 	
+	static selectAttributes(attributes) {
+		return attributes?.length ? attributes.map(attr => `"${attr}"`).join(', ') : '*';
+	}
+	
 	constructor() {
 		this._query = '';
 		this._values = [];
@@ -17,7 +21,6 @@ class Query {
 		if (this._lastIndex !== this._values.length) {
 			throw new Error(`Query values length mismatch, lastIndex: ${this._lastIndex}, values length: ${this._values.length}`);
 		}
-		
 	}
 	
 	addWhere(whereFilter) {

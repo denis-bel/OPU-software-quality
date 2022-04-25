@@ -45,7 +45,7 @@ class Model {
 	 * @return {Promise<Object[]>}
 	 */
 	static async findAll(attributes) {
-		const query = `SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`;
+		const query = `SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`;
 		const { rows } = await this._dbClient.query(query);
 		return rows;
 	}
@@ -64,7 +64,7 @@ class Model {
 	 */
 	static async find(filter, attributes) {
 		const query = new Query();
-		query.add(`SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`);
+		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`);
 		query.addWhere(filter.where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
@@ -78,7 +78,7 @@ class Model {
 	 */
 	static async findOne(filter, attributes) {
 		const query = new Query();
-		query.add(`SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}"`);
+		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`);
 		query.addWhere(filter.where);
 		query.add('LIMIT 1');
 		const { rows } = await this._dbClient.query(query.query, query.values);
@@ -95,7 +95,7 @@ class Model {
 	 * @return {Promise<Object|null>}
 	 */
 	static async findById(id, attributes) {
-		const query = `SELECT ${this._buildAttributesQuery(attributes)} FROM "${this._tableName}" WHERE id = $1`;
+		const query = `SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}" WHERE id = $1`;
 		const { rows } = await this._dbClient.query(query, [id]);
 		if (rows.length) {
 			return rows[0];
@@ -164,10 +164,6 @@ class Model {
 		const query = `DELETE FROM ${this._tableName} WHERE id = $1`;
 		const { rowCount } = await this._dbClient.query(query, [id]);
 		return rowCount !== 0;
-	}
-	
-	static _buildAttributesQuery(attributes) {
-		return attributes?.length ? attributes.map(attr => `"${attr}"`).join(', ') : '*';
 	}
 }
 
