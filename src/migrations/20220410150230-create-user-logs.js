@@ -1,4 +1,4 @@
-const tableName = 'user-logs';
+const tableName = 'user_logs';
 
 module.exports = {
 	async up(queryInterface, Sequelize) {

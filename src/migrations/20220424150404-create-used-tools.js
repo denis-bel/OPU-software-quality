@@ -1,4 +1,4 @@
-const tableName = 'used-tools';
+const tableName = 'used_tools';
 
 module.exports = {
 	async up(queryInterface, Sequelize) {

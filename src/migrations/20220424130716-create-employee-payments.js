@@ -1,4 +1,4 @@
-const tableName = 'employee-payments';
+const tableName = 'employee_payments';
 
 module.exports = {
 	async up(queryInterface, Sequelize) {

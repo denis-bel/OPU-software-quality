@@ -5,6 +5,6 @@ class UserLog extends Model {
 
 }
 
-UserLog.initialize({ tableName: 'user-logs', dbClient, withTimeStamps: true });
+UserLog.initialize({ tableName: 'user_logs', dbClient, withTimeStamps: true });
 
 export default UserLog;

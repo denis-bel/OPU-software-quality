@@ -1,4 +1,4 @@
-const tableName = 'road-objects';
+const tableName = 'road_objects';
 
 module.exports = {
 	async up(queryInterface, Sequelize) {
