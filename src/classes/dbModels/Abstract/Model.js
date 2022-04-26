@@ -78,9 +78,9 @@ class Model {
 	 */
 	static async findOne(filter, attributes) {
 		const query = new Query();
-		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`);
+		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}" `);
 		query.addWhere(filter.where);
-		query.add('LIMIT 1');
+		query.add('LIMIT 1 ');
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		if (rows.length) {
 			return rows[0];
