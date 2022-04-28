@@ -1,14 +1,11 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import authRouter from '@routers/auth';
-import userRouter from '@routers/user';
 import { API_PORT, NODE_ENV } from '@config/env';
 import errorHandler from '@middlewares/errorHandler';
 import logger from '@lib/logger';
 import log from '@middlewares/log';
-import userLogRouter from '@routers/userLog';
-import brigadeRouter from '@routers/brigade';
+import useRouters from '@routers/index';
 
 const app = express();
 
@@ -24,10 +21,7 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../front', 'index.html'));
 });
 
-app.use('/', authRouter);
-app.use('/user', userRouter);
-app.use('/userLogs', userLogRouter);
-app.use('/brigade', brigadeRouter);
+useRouters(app);
 
 app.use(errorHandler);
 
