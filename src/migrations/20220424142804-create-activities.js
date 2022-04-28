@@ -29,7 +29,7 @@ module.exports = {
 				allowNull: false,
 				onDelete: 'CASCADE',
 				references: {
-					model: 'road-objects',
+					model: 'road_objects',
 					key: 'id'
 				}
 			},

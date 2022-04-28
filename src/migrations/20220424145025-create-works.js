@@ -29,7 +29,7 @@ module.exports = {
 				allowNull: false,
 				onDelete: 'CASCADE',
 				references: {
-					model: 'work-types',
+					model: 'work_types',
 					key: 'id'
 				}
 			},

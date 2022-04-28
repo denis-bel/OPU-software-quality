@@ -1,4 +1,4 @@
-const tableName = 'work-types';
+const tableName = 'work_types';
 
 module.exports = {
 	up: async queryInterface =>

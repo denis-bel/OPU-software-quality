@@ -1,6 +1,6 @@
 import Employee from '@classes/dbModels/Employee';
 
-const tableName = 'employee-payments';
+const tableName = 'employee_payments';
 
 const now = () => new Date();
 
