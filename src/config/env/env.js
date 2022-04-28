@@ -14,24 +14,6 @@ let {
 
 USER_PASSWORD_SALT_ROUNDS = Number.parseInt(USER_PASSWORD_SALT_ROUNDS);
 
-const variables = {
-	API_PORT,
-	NODE_ENV,
-	POSTGRES_DB,
-	POSTGRES_HOST,
-	POSTGRES_PASSWORD,
-	POSTGRES_USER,
-	USER_PASSWORD_SALT_ROUNDS,
-	USER_TOKEN_EXPIRES_HOURS,
-	USER_TOKEN_SECRET_KEY
-};
-
-for (const [key, value] of Object.entries(variables)) {
-	if (typeof value === 'undefined') {
-		console.log(`\x1B[31m[process.env]: ${key} is not defined\x1B[39m`);
-	}
-}
-
 export {
 	API_PORT,
 	NODE_ENV,
