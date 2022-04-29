@@ -4,6 +4,7 @@ import userLogRouter from '@routers/userLog';
 import brigadeRouter from '@routers/brigade';
 import employeeRouter from '@routers/employee';
 import materialRouter from '@routers/material';
+import toolRouter from '@routers/tool'
 
 export default app => {
 	app.use('/', authRouter);
@@ -12,4 +13,5 @@ export default app => {
 	app.use('/brigade', brigadeRouter);
 	app.use('/employee', employeeRouter);
 	app.use('/material', materialRouter);
+	app.use('/tool', toolRouter)
 }
