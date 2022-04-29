@@ -6,6 +6,7 @@ import employeeRouter from '@routers/employee';
 import materialRouter from '@routers/material';
 import toolRouter from '@routers/tool';
 import transportRouter from '@routers/transport';
+import workTypeRouter from '@routers/workType';
 
 export default app => {
 	app.use('/', authRouter);
@@ -16,4 +17,5 @@ export default app => {
 	app.use('/material', materialRouter);
 	app.use('/tool', toolRouter);
 	app.use('/transport', transportRouter);
+	app.use('/workType', workTypeRouter);
 }
