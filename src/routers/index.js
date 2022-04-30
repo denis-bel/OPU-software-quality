@@ -9,6 +9,7 @@ import transportRouter from '@routers/transport';
 import workTypeRouter from '@routers/workType';
 import roadObjectRouter from '@routers/roadObject';
 import employeePaymentRouter from '@routers/employeePayment';
+import activityRouter from '@routers/activity';
 
 export default app => {
 	app.use('/', authRouter);
@@ -22,4 +23,5 @@ export default app => {
 	app.use('/workType', workTypeRouter);
 	app.use('/roadObject', roadObjectRouter);
 	app.use('/employeePayment', employeePaymentRouter);
+	app.use('/activity', activityRouter);
 }
