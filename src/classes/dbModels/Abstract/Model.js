@@ -1,5 +1,7 @@
+import _ from 'lodash'
 import Query from '@classes/Query';
 import keyValues from '@lib/keyValues';
+import isObjectEmpty from '@lib/isObjectEmpty';
 
 /**
  * This is abstract class. It represents database table. It provides basic CRUD operations
@@ -62,10 +64,13 @@ class Model {
 	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object[]>}
 	 */
-	static async find(filter, attributes) {
+	static async find(filter = {}, attributes = []) {
 		const query = new Query();
 		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`);
-		query.addWhere(filter.where);
+		const { where } = filter;
+		if (!isObjectEmpty(where)) {
+			query.addWhere(_.omitBy(where, _.isUndefined));
+		}
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
