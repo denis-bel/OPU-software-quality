@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash';
 import Query from '@classes/Query';
 import keyValues from '@lib/keyValues';
 import isObjectEmpty from '@lib/isObjectEmpty';
@@ -68,9 +68,7 @@ class Model {
 		const query = new Query();
 		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`);
 		const { where } = filter;
-		if (!isObjectEmpty(where)) {
-			query.addWhere(_.omitBy(where, _.isUndefined));
-		}
+		this._addWhere(query, where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
@@ -169,6 +167,12 @@ class Model {
 		const query = `DELETE FROM ${this._tableName} WHERE id = $1`;
 		const { rowCount } = await this._dbClient.query(query, [id]);
 		return rowCount !== 0;
+	}
+	
+	static _addWhere(query, where) {
+		if (!isObjectEmpty(where)) {
+			query.addWhere(_.omitBy(where, _.isUndefined));
+		}
 	}
 }
 
