@@ -13,6 +13,7 @@ import activityRouter from '@routers/activity';
 import usedTransportRouter from '@routers/usedTransport';
 import workRouter from '@routers/work';
 import usedMaterialRouter from '@routers/usedMaterial';
+import usedToolRouter from '@routers/usedTool';
 
 export default app => {
 	app.use('/', authRouter);
@@ -30,4 +31,5 @@ export default app => {
 	app.use('/usedTransport', usedTransportRouter);
 	app.use('/work', workRouter);
 	app.use('/usedMaterial', usedMaterialRouter);
+	app.use('/usedTool', usedToolRouter);
 }
