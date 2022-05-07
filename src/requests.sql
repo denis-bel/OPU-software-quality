@@ -123,3 +123,20 @@ HAVING
 	WHERE
 		"roadObjectId" = A.id
 );
+
+-- 8
+-- Для яких обʼєктів не виконувалася жодна діяльність
+SELECT road_objects.name FROM road_objects
+LEFT JOIN activities ON activities."roadObjectId" = road_objects.id
+WHERE activities.id is NULL
+
+SELECT road_objects.name FROM road_objects
+WHERE id NOT IN (
+	SELECT "roadObjectId" FROM activities
+)
+
+SELECT road_objects.name FROM road_objects
+WHERE NOT EXISTS (
+	SELECT * FROM activities
+	WHERE road_objects.id="roadObjectId"
+)
