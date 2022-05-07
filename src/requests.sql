@@ -140,3 +140,19 @@ WHERE NOT EXISTS (
 	SELECT * FROM activities
 	WHERE road_objects.id="roadObjectId"
 )
+
+-- Яким працівникам не сплатили жодного платежу?
+SELECT "fullName" FROM employees
+left JOIN employee_payments ON employees.id = employee_payments."employeeId"
+WHERE employee_payments.id IS NULL
+
+SELECT "fullName" FROM employees
+WHERE id NOT IN (
+	SELECT "employeeId" FROM employee_payments
+)
+
+SELECT "fullName" FROM employees
+WHERE NOT EXISTS (
+	SELECT * FROM employee_payments
+	WHERE employees.id="employeeId"
+)
