@@ -19,3 +19,6 @@ SELECT * FROM brigades
 WHERE "name" LIKE 'B%'
 
 -- 3
+-- Список діяльностей які почалися у заданий період
+SELECT * FROM activities
+WHERE "startDate" BETWEEN '2022-04-01' AND '2022-05-01'
