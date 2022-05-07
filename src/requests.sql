@@ -22,3 +22,30 @@ WHERE "name" LIKE 'B%'
 -- Список діяльностей які почалися у заданий період
 SELECT * FROM activities
 WHERE "startDate" BETWEEN '2022-04-01' AND '2022-05-01'
+
+-- Список платежів працівників сума яких, лежить у заданому діапазоні
+SELECT * FROM employee_payments
+WHERE sum BETWEEN 11000 AND 15000
+
+-- 4
+-- Скільки платежів виплачено робітнику з заданим ПІБ
+SELECT count(*) FROM employee_payments
+INNER JOIN employees ON "employeeId" = employees.id
+WHERE "fullName" = 'Joshua K. Gunn'
+
+-- Скільки робітників належить бригаді з заданим номером
+SELECT count(*) FROM employees
+INNER JOIN brigades ON "brigadeId" = brigades .id
+WHERE number = 1
+
+-- 5
+-- Середня сума сплат робітників
+SELECT "fullName", avg(sum)  FROM employees
+JOIN employee_payments ON employee_payments."employeeId" = employees.id
+GROUP BY "fullName"
+
+-- Скільки робітників працюють у кожній бригаді?
+SELECT name, count(*) FROM brigades
+JOIN employees
+ON employees."brigadeId" = brigades.id
+GROUP BY name;
