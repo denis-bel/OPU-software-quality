@@ -94,4 +94,32 @@ HAVING
 		"brigadeId" = A.id
 );
 
---
+-- Для кожного обʼєкту визначити матеріал, який використовується найбільше
+SELECT
+	A.name,
+	materials.name
+FROM
+	road_objects AS A
+INNER JOIN activities ON
+	A.id = activities."roadObjectId"
+INNER JOIN used_materials ON
+	used_materials."activityId" = activities.id
+INNER JOIN materials ON
+	used_materials."materialId" = materials.id
+GROUP BY
+	A.id,
+	materials.name,
+	count
+HAVING
+	count >= (
+	SELECT
+		max(count)
+	FROM
+		road_objects
+	INNER JOIN activities ON
+		road_objects.id = activities."roadObjectId"
+	INNER JOIN used_materials ON
+		used_materials."activityId" = activities.id
+	WHERE
+		"roadObjectId" = A.id
+);
