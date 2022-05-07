@@ -280,3 +280,30 @@ WHERE
 			GROUP BY
 				"materialId" ) AS A
 ))
+
+-- В поле з додатковою інформацією відповідного типу роботи записати "Most frequent"
+UPDATE
+	work_types
+SET
+	"extraInfo" = 'Most frequent'
+WHERE
+	id = (
+	SELECT
+		"workTypeId"
+	FROM
+		works
+	GROUP BY
+		"workTypeId"
+	HAVING
+		count(*) >= (
+		SELECT
+			max(count)
+		FROM
+			(
+			SELECT
+				count(*),
+				"workTypeId"
+			FROM
+				works
+			GROUP BY
+				"workTypeId") AS A))
