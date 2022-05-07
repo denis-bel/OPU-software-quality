@@ -252,3 +252,31 @@ HAVING
 			brigades.id) AS A)
 
 
+-- 10
+-- В поле з додатковою інформацією відповідного матеріала записати "Most used"
+UPDATE
+	materials
+SET
+	"extraInfo" = 'Most used'
+WHERE
+	id = (
+	SELECT
+		"materialId"
+	FROM
+		used_materials
+	GROUP BY
+		"materialId"
+	HAVING
+		sum(count) >= (
+		SELECT
+			max(sum)
+		FROM
+			(
+			SELECT
+				sum(count),
+				"materialId"
+			FROM
+				used_materials
+			GROUP BY
+				"materialId" ) AS A
+))
