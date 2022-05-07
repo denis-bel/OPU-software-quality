@@ -17,6 +17,9 @@ module.exports = {
 				type: 'decimal(12,2)',
 				allowNull: false
 			},
+			extraInfo: {
+				type: Sequelize.STRING(200)
+			},
 			createdAt: {
 				allowNull: false,
 				type: 'TIMESTAMP',
