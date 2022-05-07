@@ -178,7 +178,7 @@ HAVING
 	INNER JOIN employees ON
 		"employeeId" = employees.id
 )
-UNION
+UNION ALL
 SELECT
 	min(sum),
 	"fullName",
@@ -199,4 +199,56 @@ HAVING
 		"employeeId" = employees.id
 )
 
---
+-- Визначити бригади з максимальною та мінімальною кількістю робітників
+
+SELECT
+	count(*),
+	name,
+	'Maximum employees' AS COMMENT
+FROM
+	brigades
+INNER JOIN employees ON
+	employees."brigadeId" = brigades.id
+GROUP BY
+	brigades.id
+HAVING
+	count(*) >= (
+	SELECT
+		max(count)
+	FROM
+		(
+		SELECT
+			count(*)
+		FROM
+			brigades
+		INNER JOIN employees ON
+			employees."brigadeId" = brigades.id
+		GROUP BY
+			brigades.id) AS A)
+UNION ALL
+SELECT
+	count(*),
+	name,
+	'Minimun employees' AS COMMENT
+FROM
+	brigades
+INNER JOIN employees ON
+	employees."brigadeId" = brigades.id
+GROUP BY
+	brigades.id
+HAVING
+	count(*) <= (
+	SELECT
+		min(count)
+	FROM
+		(
+		SELECT
+			count(*)
+		FROM
+			brigades
+		INNER JOIN employees ON
+			employees."brigadeId" = brigades.id
+		GROUP BY
+			brigades.id) AS A)
+
+
