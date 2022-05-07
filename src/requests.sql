@@ -156,3 +156,47 @@ WHERE NOT EXISTS (
 	SELECT * FROM employee_payments
 	WHERE employees.id="employeeId"
 )
+
+-- 9
+-- Визначити робітників з найбільшою та найменшою виплатою
+SELECT
+	max(sum),
+	"fullName",
+	'Max payment' AS COMMENT
+FROM
+	employee_payments
+INNER JOIN employees ON
+	"employeeId" = employees.id
+GROUP BY
+	employees.id
+HAVING
+	max(sum) >= (
+	SELECT
+		max(sum)
+	FROM
+		employee_payments
+	INNER JOIN employees ON
+		"employeeId" = employees.id
+)
+UNION
+SELECT
+	min(sum),
+	"fullName",
+	'Min payment' AS COMMENT
+FROM
+	employee_payments
+INNER JOIN employees ON
+	"employeeId" = employees.id
+GROUP BY
+	employees.id
+HAVING
+	min(sum) <= (
+	SELECT
+		min(sum)
+	FROM
+		employee_payments
+	INNER JOIN employees ON
+		"employeeId" = employees.id
+)
+
+--
