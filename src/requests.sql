@@ -49,3 +49,49 @@ SELECT name, count(*) FROM brigades
 JOIN employees
 ON employees."brigadeId" = brigades.id
 GROUP BY name;
+
+-- 6
+-- Яка бригада має найбільше діяльностей?
+SELECT name
+FROM brigades
+INNER JOIN activities ON activities."brigadeId" = brigades.id
+GROUP BY brigades.id
+HAVING count(*) >= ALL(SELECT count(*) FROM activities GROUP BY "brigadeId")
+
+-- Хто з робітників має найбільше виплат?
+SELECT "fullName" FROM employees
+INNER JOIN employee_payments ON employee_payments."employeeId" = employees.id
+GROUP BY employees.id
+HAVING count(*) >= ALL (SELECT count(*) FROM employee_payments GROUP BY "employeeId")
+
+-- 7
+-- Для кожної бригади виначити робітника з максимальною сплатою
+SELECT
+	name,
+	"fullName",
+	sum
+FROM
+	brigades AS A
+INNER JOIN employees ON
+	employees."brigadeId" = A.id
+INNER JOIN employee_payments ON
+	employee_payments."employeeId" = employees.id
+GROUP BY
+	A.id,
+	employees.id,
+	sum
+HAVING
+	sum >= (
+	SELECT
+		max(sum)
+	FROM
+		employees
+	INNER JOIN brigades ON
+		brigades.id = "brigadeId"
+	INNER JOIN employee_payments ON
+		employee_payments."employeeId" = employees.id
+	WHERE
+		"brigadeId" = A.id
+);
+
+--
