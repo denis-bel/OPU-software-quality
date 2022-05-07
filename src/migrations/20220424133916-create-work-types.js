@@ -13,6 +13,9 @@ module.exports = {
 				type: Sequelize.STRING(50),
 				allowNull: false
 			},
+			extraInfo: {
+				type: Sequelize.STRING(200)
+			},
 			createdAt: {
 				allowNull: false,
 				type: 'TIMESTAMP',
