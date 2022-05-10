@@ -259,7 +259,7 @@ UPDATE
 SET
 	"extraInfo" = 'Most used'
 WHERE
-	id = (
+	id in (
 	SELECT
 		"materialId"
 	FROM
@@ -287,7 +287,7 @@ UPDATE
 SET
 	"extraInfo" = 'Most frequent'
 WHERE
-	id = (
+	id in (
 	SELECT
 		"workTypeId"
 	FROM
