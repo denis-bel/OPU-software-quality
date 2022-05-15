@@ -1,5 +1,6 @@
 import { HTTP_CODE_BAD_REQUEST } from '@constants/httpCode';
 import Brigade from '@classes/dbModels/Brigade';
+import middlewareWrapper from '@lib/middlewareWrapper';
 
 async function update(req, res) {
 	const { id, ...data } = req.body;
@@ -12,4 +13,4 @@ async function update(req, res) {
 	res.send({ brigade });
 }
 
-export default [update];
+export default [middlewareWrapper(update)];

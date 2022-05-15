@@ -1,5 +1,6 @@
 import User from '@classes/dbModels/User';
 import { HTTP_CODE_BAD_REQUEST } from '@constants/httpCode';
+import middlewareWrapper from '@lib/middlewareWrapper';
 
 async function update(req, res) {
 	const { id, password, ...data } = req.body;
@@ -15,4 +16,4 @@ async function update(req, res) {
 	res.send({ user });
 }
 
-export default [update];
+export default [middlewareWrapper(update)];
