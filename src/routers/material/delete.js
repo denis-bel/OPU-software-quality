@@ -1,19 +1,19 @@
 import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
-import Employee from '@classes/dbModels/Employee';
+import Material from '@classes/dbModels/Material';
 
-async function deleteEmployee(req, res) {
+async function deleteMaterial(req, res) {
 	const { id } = req.params;
-	const employee = await Employee.findById(id);
-	if (!employee) {
+	const material = await Material.findById(id);
+	if (!material) {
 		return res.status(HTTP_CODE_NOT_FOUND).json({
-			message: 'Employee not found'
+			message: 'Material not found'
 		});
 	}
-	const isDeleted = await Employee.deleteById(id);
+	const isDeleted = await Material.deleteById(id);
 	if (isDeleted) {
 		return res.send({
-			message: 'Employee deleted successfully'
+			message: 'Material deleted successfully'
 		});
 	} else {
 		return res.status(HTTP_CODE_SERVER_ERROR).send({
@@ -22,4 +22,4 @@ async function deleteEmployee(req, res) {
 	}
 }
 
-export default [middlewareWrapper(deleteEmployee)];
+export default [middlewareWrapper(deleteMaterial)];
