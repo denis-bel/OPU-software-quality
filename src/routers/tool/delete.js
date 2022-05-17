@@ -2,7 +2,7 @@ import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 import Tool from '@classes/dbModels/Tool';
 
-async function deleteMaterial(req, res) {
+async function deleteTool(req, res) {
 	const { id } = req.params;
 	const tool = await Tool.findById(id);
 	if (!tool) {
@@ -22,4 +22,4 @@ async function deleteMaterial(req, res) {
 	}
 }
 
-export default [middlewareWrapper(deleteMaterial)];
+export default [middlewareWrapper(deleteTool)];
