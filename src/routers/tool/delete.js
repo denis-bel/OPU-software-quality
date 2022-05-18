@@ -17,7 +17,7 @@ async function deleteTool(req, res) {
 		});
 	} else {
 		return res.status(HTTP_CODE_SERVER_ERROR).send({
-			message: 'Error deleting brigade'
+			message: 'Error deleting tool'
 		});
 	}
 }
