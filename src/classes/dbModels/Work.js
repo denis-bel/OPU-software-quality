@@ -6,7 +6,7 @@ class Work extends Model {
 	static async findWithName(filter) {
 		const query = new Query();
 		query.add(`
-			SELECT "startDate", "finishDate", "activityId", "workTypeId", name AS "workTypeName" FROM works
+			SELECT "startDate", "finishDate", "activityId", "workTypeId", name AS "workTypeName", works.id FROM works
 			INNER JOIN work_types ON work_types.id = "workTypeId"
 			`);
 		this._addWhere(query, filter.where);
