@@ -10,10 +10,10 @@ module.exports = {
 				type: Sequelize.INTEGER
 			},
 			startDate: {
-				type: Sequelize.DATE
+				type: 'TIMESTAMP'
 			},
 			finishDate: {
-				type: Sequelize.DATE
+				type: 'TIMESTAMP'
 			},
 			activityId: {
 				type: Sequelize.INTEGER,
