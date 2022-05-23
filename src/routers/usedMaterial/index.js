@@ -1,10 +1,12 @@
 import express from 'express';
 import authorizeUser from '@middlewares/authorizeUser';
-import getAllMiddleware from './getAll';
+import getAllMiddlewares from './getAll';
+import createMiddlewares from './create';
 
 const router = express.Router();
 
 router.use(authorizeUser);
-router.get('/all', ...getAllMiddleware);
+router.get('/all', ...getAllMiddlewares);
+router.post('/', ...createMiddlewares);
 
 export default router;
