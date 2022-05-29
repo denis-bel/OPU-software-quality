@@ -16,6 +16,18 @@ class EmployeePayment extends Model {
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
+	
+	static async getPaymentCount(employeeId) {
+		const query = new Query();
+		query.add(
+			`SELECT COUNT(*)
+       FROM employee_payments
+                INNER JOIN employees ON "employeeId" = employees.id
+       WHERE employees.id = ${query.nextIndex}
+			`, [employeeId]);
+		const { rows } = await this._dbClient.query(query.query, query.values);
+		return Number(rows[0].count);
+	}
 }
 
 EmployeePayment.initialize({ tableName: 'employee_payments', dbClient, withTimeStamps: true });

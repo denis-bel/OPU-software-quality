@@ -31,7 +31,6 @@ class Employee extends Model {
 		const query = new Query();
 		query.add(this.query.withBrigadeName);
 		query.add(`WHERE "fullName" LIKE ${query.nextIndex}`, ['%' + fullName + '%']);
-		console.log(query.query, query.values);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
