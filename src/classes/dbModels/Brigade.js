@@ -27,6 +27,25 @@ class Brigade extends Model {
 		const { rows } = await this._dbClient.query(query);
 		return rows;
 	}
+	
+	static async findAllWithBestEmployee() {
+		const query = `SELECT A.id,
+                          a.name,
+                          STRING_AGG(employees."fullName", ', ') AS "bestEmployee"
+                   FROM brigades AS A
+                            LEFT JOIN employees ON employees."brigadeId" = A.id
+                            LEFT JOIN employee_payments ON employee_payments."employeeId" = employees.id
+                   GROUP BY A.id,
+                            sum
+                   HAVING sum >= (SELECT MAX(sum)
+                                  FROM employees
+                                           INNER JOIN brigades ON brigades.id = "brigadeId"
+                                           INNER JOIN employee_payments ON employee_payments."employeeId" = employees.id
+                                  WHERE "brigadeId" = A.id);
+		`;
+		const { rows } = await this._dbClient.query(query);
+		return rows;
+	}
 }
 
 Brigade.initialize({ tableName: 'brigades', dbClient, withTimeStamps: true });
