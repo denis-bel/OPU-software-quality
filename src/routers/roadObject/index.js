@@ -4,12 +4,14 @@ import getAllMiddlewares from './getAll';
 import createMiddlewares from './create';
 import updateMiddlewares from './update';
 import deleteMiddlewares from './delete';
+import allWithoutActivities from './allWithoutActivities';
 
 const router = express.Router();
 
 router.use(authorizeUser);
 
 router.get('/all', ...getAllMiddlewares);
+router.get('/withoutActivities', ...allWithoutActivities);
 router.post('/', ...createMiddlewares);
 router.put('/', ...updateMiddlewares);
 router.delete('/:id', ...deleteMiddlewares);
