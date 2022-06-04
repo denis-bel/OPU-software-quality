@@ -5,12 +5,14 @@ import createMiddlewares from './create';
 import updateMiddlewares from './update';
 import deleteMiddlewares from './delete';
 import fillNameFilterMiddlewares from './filterByFullName';
+import minAndMaxPayment from './minAndMaxPayment';
 
 const router = express.Router();
 
 router.use(authorizeUser);
 
 router.get('/all', ...getAllMiddlewares);
+router.get('/minAndMaxPayment', ...minAndMaxPayment);
 router.post('/', ...createMiddlewares);
 router.put('/', ...updateMiddlewares);
 router.delete('/:id', ...deleteMiddlewares);

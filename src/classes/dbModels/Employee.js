@@ -34,6 +34,30 @@ class Employee extends Model {
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
+	
+	static async findMaxAndMinPayment() {
+		const query = `SELECT MAX(sum) as "sum",
+                          "fullName",
+                          'Max payment' AS COMMENT
+                   FROM employee_payments
+                            INNER JOIN employees ON "employeeId" = employees.id
+                   GROUP BY employees.id
+                   HAVING MAX(sum) >= (SELECT MAX(sum)
+                                       FROM employee_payments
+                                                INNER JOIN employees ON "employeeId" = employees.id)
+                   UNION ALL
+                   SELECT MIN(sum),
+                          "fullName",
+                          'Min payment' AS COMMENT
+                   FROM employee_payments
+                            INNER JOIN employees ON "employeeId" = employees.id
+                   GROUP BY employees.id
+                   HAVING MIN(sum) <= (SELECT MIN(sum)
+                                       FROM employee_payments
+                                                INNER JOIN employees ON "employeeId" = employees.id)`;
+		const { rows } = await this._dbClient.query(query);
+		return rows;
+	}
 }
 
 Object.freeze(Employee.query);
