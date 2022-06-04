@@ -1,7 +1,7 @@
 import User from '@classes/dbModels/User';
 import { HTTP_CODE_BAD_REQUEST, HTTP_CODE_CREATED } from '@constants/httpCode';
 import isRegisterDataValid from '@lib/validator/checkers/register';
-import { USER_ROLE_USER } from '@constants/User';
+import { USER_ROLE_EMPLOYEE } from '@constants/User';
 import middlewareWrapper from '@lib/middlewareWrapper';
 import UserLog from '@classes/dbModels/UserLog';
 
@@ -38,7 +38,7 @@ async function createUser(req, res) {
 	const user = await User.create({
 		login,
 		password,
-		role: USER_ROLE_USER
+		role: USER_ROLE_EMPLOYEE
 	});
 	const token = await User.generateToken({ login: user.login });
 	await UserLog.create({ userId: user.id, action: 'Registered' });

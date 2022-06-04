@@ -1,4 +1,4 @@
-const { USER_ROLE_ADMIN, USER_ROLE_USER, USER_ROLE_SUPER_ADMIN } = require('@constants/User');
+const { USER_ROLE_ACCOUNTANT, USER_ROLE_EMPLOYEE, USER_ROLE_ADMIN } = require('@constants/User');
 
 const tableName = 'users';
 
@@ -21,7 +21,7 @@ module.exports = {
 				allowNull: false
 			},
 			role: {
-				type: Sequelize.ENUM(USER_ROLE_ADMIN, USER_ROLE_USER, USER_ROLE_SUPER_ADMIN),
+				type: Sequelize.ENUM(USER_ROLE_ACCOUNTANT, USER_ROLE_EMPLOYEE, USER_ROLE_ADMIN),
 				allowNull: false
 			},
 			createdAt: {

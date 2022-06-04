@@ -1,3 +1,3 @@
-export const USER_ROLE_USER = 'user';
+export const USER_ROLE_EMPLOYEE = 'employee';
+export const USER_ROLE_ACCOUNTANT = 'accountant';
 export const USER_ROLE_ADMIN = 'admin';
-export const USER_ROLE_SUPER_ADMIN = 'super-admin';
