@@ -47,7 +47,8 @@ class Model {
 	 * @return {Promise<Object[]>}
 	 */
 	static async findAll(attributes) {
-		const query = `SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`;
+		const query = `SELECT ${Query.selectAttributes(attributes)}
+                   FROM "${this._tableName}"`;
 		const { rows } = await this._dbClient.query(query);
 		return rows;
 	}
@@ -62,13 +63,19 @@ class Model {
 	 * This method finds table rows with filter
 	 * @param {Filter} filter - filter
 	 * @param {String[]} [attributes] - attributes to select
+	 * @param {Object} options - options
+	 * @param {String} options.orderBy - order by attribute name
 	 * @return {Promise<Object[]>}
 	 */
-	static async find(filter = {}, attributes = []) {
+	static async find(filter = {}, attributes = [], { orderBy } = {}) {
 		const query = new Query();
-		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}"`);
+		query.add(`SELECT ${Query.selectAttributes(attributes)}
+               FROM "${this._tableName}"`);
 		const { where } = filter;
 		this._addWhere(query, where);
+		if (orderBy) {
+			query.add(` ORDER BY "${orderBy}" DESC`);
+		}
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
@@ -81,7 +88,8 @@ class Model {
 	 */
 	static async findOne(filter, attributes) {
 		const query = new Query();
-		query.add(`SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}" `);
+		query.add(`SELECT ${Query.selectAttributes(attributes)}
+               FROM "${this._tableName}" `);
 		query.addWhere(filter.where);
 		query.add('LIMIT 1 ');
 		const { rows } = await this._dbClient.query(query.query, query.values);
@@ -98,7 +106,9 @@ class Model {
 	 * @return {Promise<Object|null>}
 	 */
 	static async findById(id, attributes) {
-		const query = `SELECT ${Query.selectAttributes(attributes)} FROM "${this._tableName}" WHERE id = $1`;
+		const query = `SELECT ${Query.selectAttributes(attributes)}
+                   FROM "${this._tableName}"
+                   WHERE id = $1`;
 		const { rows } = await this._dbClient.query(query, [id]);
 		if (rows.length) {
 			return rows[0];
@@ -121,10 +131,10 @@ class Model {
 		const attributeNames = keys.map(key => `"${key}"`);
 		const query = new Query();
 		query.add(`
-			INSERT INTO "${this._tableName}"(${attributeNames.join(', ')})
-			VALUES(${values.map(() => query.nextIndex).join(', ')})
-			RETURNING *
-			`, values);
+        INSERT INTO "${this._tableName}"(${attributeNames.join(', ')})
+        VALUES (${values.map(() => query.nextIndex).join(', ')})
+        RETURNING *
+		`, values);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		if (rows.length) {
 			return rows[0];
@@ -149,11 +159,11 @@ class Model {
 			keyValueQueries.push(`"${key}" = ${query.nextIndex}`);
 		});
 		query.add(`
-			UPDATE "${this._tableName}"
-			SET ${keyValueQueries.join(', ')}
-			WHERE id = ${query.nextIndex}
-			RETURNING *
-			`, [...values, id]);
+        UPDATE "${this._tableName}"
+        SET ${keyValueQueries.join(', ')}
+        WHERE id = ${query.nextIndex}
+        RETURNING *
+		`, [...values, id]);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows[0];
 	}
@@ -164,7 +174,9 @@ class Model {
 	 * @return {Promise<Boolean>} - true if row was deleted
 	 */
 	static async deleteById(id) {
-		const query = `DELETE FROM ${this._tableName} WHERE id = $1`;
+		const query = `DELETE
+                   FROM ${this._tableName}
+                   WHERE id = $1`;
 		const { rowCount } = await this._dbClient.query(query, [id]);
 		return rowCount !== 0;
 	}
