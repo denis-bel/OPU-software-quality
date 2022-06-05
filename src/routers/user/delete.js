@@ -1,6 +1,7 @@
 import User from '@classes/dbModels/User';
 import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_BAD_REQUEST, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
+import UserLog from '@classes/dbModels/UserLog';
 
 async function deleteUser(req, res) {
 	const { id } = req.params;
@@ -12,6 +13,8 @@ async function deleteUser(req, res) {
 	}
 	const isDeleted = await User.deleteById(id);
 	if(isDeleted) {
+		const { user } = req;
+		await UserLog.create({ userId: user.id, action: 'Delete user' });
 		return res.send({
 			message: 'User deleted successfully'
 		});

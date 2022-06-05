@@ -1,6 +1,7 @@
 import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 import Work from '@classes/dbModels/Work';
+import UserLog from '@classes/dbModels/UserLog';
 
 async function deleteWork(req, res) {
 	const { id } = req.params;
@@ -12,6 +13,8 @@ async function deleteWork(req, res) {
 	}
 	const isDeleted = await Work.deleteById(id);
 	if (isDeleted) {
+		const { user } = req;
+		await UserLog.create({ userId: user.id, action: 'Delete work' });
 		return res.send({
 			message: 'Work was deleted successfully'
 		});

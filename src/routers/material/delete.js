@@ -1,6 +1,7 @@
 import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 import Material from '@classes/dbModels/Material';
+import UserLog from '@classes/dbModels/UserLog';
 
 async function deleteMaterial(req, res) {
 	const { id } = req.params;
@@ -12,6 +13,8 @@ async function deleteMaterial(req, res) {
 	}
 	const isDeleted = await Material.deleteById(id);
 	if (isDeleted) {
+		const { user } = req;
+		await UserLog.create({ userId: user.id, action: 'Delete material' });
 		return res.send({
 			message: 'Material deleted successfully'
 		});

@@ -1,6 +1,7 @@
 import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 import UsedTool from '@classes/dbModels/UsedTool';
+import UserLog from '@classes/dbModels/UserLog';
 
 async function deleteUsedTool(req, res) {
 	const { id } = req.params;
@@ -12,6 +13,8 @@ async function deleteUsedTool(req, res) {
 	}
 	const isDeleted = await UsedTool.deleteById(id);
 	if (isDeleted) {
+		const { user } = req;
+		await UserLog.create({ userId: user.id, action: 'Delete used tool' });
 		return res.send({
 			message: 'Used tool deleted successfully'
 		});

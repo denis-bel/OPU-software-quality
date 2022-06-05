@@ -1,6 +1,7 @@
 import { HTTP_CODE_BAD_REQUEST } from '@constants/httpCode';
 import Brigade from '@classes/dbModels/Brigade';
 import middlewareWrapper from '@lib/middlewareWrapper';
+import UserLog from '@classes/dbModels/UserLog';
 
 async function checkData(req, res, next) {
 	const { id, ...data } = req.body;
@@ -11,6 +12,8 @@ async function checkData(req, res, next) {
 	}
 	const { number } = data;
 	if (number) {
+		const { user } = req;
+		await UserLog.create({ userId: user.id, action: 'Update brigade' });
 		const existingBrigade = await Brigade.findOne({ where: { number } });
 		if (existingBrigade) {
 			return res.status(HTTP_CODE_BAD_REQUEST).json({

@@ -1,6 +1,7 @@
 import middlewareWrapper from '@lib/middlewareWrapper';
 import { HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 import Transport from '@classes/dbModels/Transport';
+import UserLog from '@classes/dbModels/UserLog';
 
 async function deleteTransport(req, res) {
 	const { id } = req.params;
@@ -12,6 +13,8 @@ async function deleteTransport(req, res) {
 	}
 	const isDeleted = await Transport.deleteById(id);
 	if (isDeleted) {
+		const { user } = req;
+		await UserLog.create({ userId: user.id, action: 'Delete transport' });
 		return res.send({
 			message: 'Transport deleted successfully'
 		});
