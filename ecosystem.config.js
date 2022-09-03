@@ -11,7 +11,8 @@ module.exports = {
 			script: 'entry.js',
 			watch: 'src',
 			exec_interpreter: 'babel-node',
-			ignore_watch
+			ignore_watch,
+			args: '--extensions ".ts,.js"'
 		}
 	]
 };

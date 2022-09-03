@@ -1,17 +1,25 @@
 {
-  "presets": ["@babel/preset-env"],
+  "presets": [
+    "@babel/preset-typescript",
+    "@babel/preset-env"
+  ],
   "plugins": [
     "@babel/plugin-transform-runtime",
-    ["module-resolver", {
-      "root": ["./src"],
-      "alias": {
-        "@classes": "./src/classes",
-        "@lib": "./src/lib",
-        "@constants": "./src/constants",
-        "@config": "./src/config",
-        "@routers": "./src/routers",
-        "@middlewares": "./src/middlewares"
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./src"
+        ],
+        "alias": {
+          "@classes": "./src/classes",
+          "@lib": "./src/lib",
+          "@constants": "./src/constants",
+          "@config": "./src/config",
+          "@routers": "./src/routers",
+          "@middlewares": "./src/middlewares"
+        }
       }
-    }]
+    ]
   ]
 }

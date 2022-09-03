@@ -17,7 +17,6 @@ class Model {
 	/**
 	 * Client to execute database query
 	 * @type {Pool}
-	 * @protected
 	 */
 	static _dbClient;
 	

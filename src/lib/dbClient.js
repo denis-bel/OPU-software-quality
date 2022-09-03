@@ -9,6 +9,5 @@ const pool = new Pool({
 	port: 5432
 });
 
-pool.connect();
 
 export default pool;
