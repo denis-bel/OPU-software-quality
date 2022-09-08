@@ -1,35 +1,19 @@
-import type { Request, Response, Router } from 'express';
+import type { Request, Response } from 'express';
 import authorizeUser from '@middlewares/authorizeUser';
 import Activity from '@classes/dbModels/Activity';
 import UserLog from '@classes/dbModels/UserLog';
 import { HTTP_CODE_BAD_REQUEST, HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
-import middlewareWrapper from '@lib/middlewareWrapper';
+import { AbstractRouter } from '@routers/AbstractRouter';
 
 type AuthedRequest = Request & { user: { id: string } }
 
-class ActivityRouter {
-  private readonly router: Router;
-
-  constructor(router: Router) {
-    this.router = router;
-    this.initializeRoutes();
-  }
-
-  public getRouter() {
-    return this.router;
-  }
-
-  private initializeRoutes() {
+class ActivityRouter extends AbstractRouter{
+  protected initializeRoutes() {
     this.router.use(authorizeUser);
     this.router.get('/all', this.wrapRoute(this.getAll));
     this.router.post('/', this.wrapRoute(this.create));
     this.router.put('/', this.wrapRoute(this.update));
     this.router.delete('/:id', this.wrapRoute(this.delete));
-  }
-
-  private wrapRoute(route: Function) {
-    const wrappedRouter = middlewareWrapper(route);
-    return wrappedRouter.bind(this);
   }
 
   private async getAll(req: Request, res: Response) {
