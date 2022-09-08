@@ -78,7 +78,7 @@ abstract class Model {
 		query.add(`SELECT ${Query.selectAttributes(attributes)}
                FROM "${this._tableName}"`);
 		const { where } = filter;
-		this._addWhere(query, where);
+		this._addWhereClause(query, where);
 		if (orderBy) {
 			query.add(` ORDER BY "${orderBy}" DESC`);
 		}
@@ -187,7 +187,7 @@ abstract class Model {
 		return rowCount !== 0;
 	}
 	
-	private static _addWhere(query: Query, where?: Object) {
+	private static _addWhereClause(query: Query, where?: Object) {
 		if (!isObjectEmpty(where)) {
 			query.addWhere(_.omitBy(where, _.isUndefined));
 		}

@@ -176,3 +176,10 @@ abstract class AbstractRouter {
 
 export { AbstractRouter };
 ```
+
+## 7 
+Rename method
+
+```typescript
+	private static _addWhereClause(query: Query, where?: Object) {
+```
