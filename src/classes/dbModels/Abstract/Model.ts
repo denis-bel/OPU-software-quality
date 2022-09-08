@@ -21,21 +21,21 @@ type FindOptions = {
 /**
  * This is abstract class. It represents database table. It provides basic CRUD operations
  */
-class Model {
+abstract class Model {
 	/**
 	 * Name of the table
 	 */
-	static _tableName: string;
+	private static _tableName: string;
 	
 	/**
 	 * Client to execute database query
 	 */
-	static _dbClient: Pool;
+	private static _dbClient: Pool;
 	
 	/**
 	 * If true, createdAt and updatedAt fields will be updated automatically
 	 */
-	static _withTimeStamps = false;
+	private static _withTimeStamps = false;
 
 
 	/**
@@ -187,7 +187,7 @@ class Model {
 		return rowCount !== 0;
 	}
 	
-	static _addWhere(query: Query, where?: Object) {
+	private static _addWhere(query: Query, where?: Object) {
 		if (!isObjectEmpty(where)) {
 			query.addWhere(_.omitBy(where, _.isUndefined));
 		}
