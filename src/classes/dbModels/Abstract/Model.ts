@@ -111,7 +111,7 @@ abstract class Model {
 	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object|null>}
 	 */
-	static async findById(id: string | number, attributes: string[]) {
+	static async findById(id: string | number, attributes?: string[]) {
 		const query = `SELECT ${Query.selectAttributes(attributes)}
                    FROM "${this._tableName}"
                    WHERE id = $1`;

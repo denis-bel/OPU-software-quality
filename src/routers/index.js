@@ -9,11 +9,12 @@ import transportRouter from '@routers/transport';
 import workTypeRouter from '@routers/workType';
 import roadObjectRouter from '@routers/roadObject';
 import employeePaymentRouter from '@routers/employeePayment';
-import activityRouter from '@routers/activity';
+import { ActivityRouter } from '@routers/activity';
 import usedTransportRouter from '@routers/usedTransport';
 import workRouter from '@routers/work';
 import usedMaterialRouter from '@routers/usedMaterial';
 import usedToolRouter from '@routers/usedTool';
+import express from 'express';
 
 export default app => {
 	app.use('/', authRouter);
@@ -27,7 +28,7 @@ export default app => {
 	app.use('/workType', workTypeRouter);
 	app.use('/roadObject', roadObjectRouter);
 	app.use('/employeePayment', employeePaymentRouter);
-	app.use('/activity', activityRouter);
+	app.use('/activity', new ActivityRouter(express.Router()).getRouter());
 	app.use('/usedTransport', usedTransportRouter);
 	app.use('/work', workRouter);
 	app.use('/usedMaterial', usedMaterialRouter);
