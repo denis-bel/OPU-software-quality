@@ -3,22 +3,17 @@ import middlewareWrapper from '@lib/middlewareWrapper';
 import Activity from '@classes/dbModels/Activity';
 import UserLog from '@classes/dbModels/UserLog';
 
-async function checkData(req, res, next) {
-	const { id } = req.body;
+async function update(req, res) {
+	const { id, ...data } = req.body;
 	if (!id) {
 		return res.status(HTTP_CODE_BAD_REQUEST).json({
 			message: 'Missing id'
 		});
 	}
-	next();
-}
-
-async function update(req, res) {
-	const { id, ...data } = req.body;
 	const activity = await Activity.updateById(data, id);
 	const { user } = req;
 	await UserLog.create({ userId: user.id, action: 'Update activity' });
 	res.send({ activity });
 }
 
-export default [middlewareWrapper(checkData), middlewareWrapper(update)];
+export default [middlewareWrapper(update)];
