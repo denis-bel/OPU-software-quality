@@ -20,9 +20,12 @@ module.exports = {
 	overrides: [
 		{
 			files: ['**/*.ts'],
+			'plugins': ['@typescript-eslint'],
 			parser: '@typescript-eslint/parser',
 			rules: {
-				'import/no-import-module-exports': 0
+				'import/no-import-module-exports': 0,
+				'no-unused-vars': 'off',
+				'@typescript-eslint/no-unused-vars': 'error'
 			}
 		}
 	],

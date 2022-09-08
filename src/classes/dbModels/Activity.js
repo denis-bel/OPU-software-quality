@@ -13,7 +13,7 @@ class Activity extends Model {
 			INNER JOIN brigades ON "brigadeId" = brigades.id
 			INNER JOIN road_objects ON "roadObjectId" = road_objects.id
 			`);
-		this._addWhere(query, filter.where);
+		this._addWhereClause(query, filter.where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}

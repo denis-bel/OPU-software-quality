@@ -187,7 +187,7 @@ abstract class Model {
 		return rowCount !== 0;
 	}
 	
-	private static _addWhereClause(query: Query, where?: Object) {
+	static _addWhereClause(query: Query, where?: Object) {
 		if (!isObjectEmpty(where)) {
 			query.addWhere(_.omitBy(where, _.isUndefined));
 		}

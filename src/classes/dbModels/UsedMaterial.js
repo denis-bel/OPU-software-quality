@@ -9,7 +9,7 @@ class UsedMaterial extends Model {
 			SELECT used_materials.id, used_materials."unitFee", name AS "materialName", count, "activityId", "materialId" FROM used_materials
 			INNER JOIN materials ON "materialId" = materials.id
 			`);
-		this._addWhere(query, filter.where);
+		this._addWhereClause(query, filter.where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}

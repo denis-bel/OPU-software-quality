@@ -20,16 +20,6 @@ Make private fields
 ```
 
 ## 3
-Make private method
-```typescript
-private static _addWhere(query: Query, where?: Object) {
-		if (!isObjectEmpty(where)) {
-			query.addWhere(_.omitBy(where, _.isUndefined));
-		}
-	}
-```
-
-## 4
 Inline method
 ```typescript
 import { HTTP_CODE_BAD_REQUEST } from '@constants/httpCode';
@@ -53,7 +43,7 @@ async function update(req, res) {
 export default [middlewareWrapper(update)];
 ```
 
-## 5
+## 4
 Wrap methods to class
 ```typescript
 import type { Request, Response, Router } from 'express';
@@ -147,7 +137,7 @@ export { ActivityRouter };
 	app.use('/activity', new ActivityRouter(express.Router()).getRouter());
 ```
 
-## 6
+## 5
 Move duplicated code to abstract class
 
 ```typescript
@@ -177,9 +167,35 @@ abstract class AbstractRouter {
 export { AbstractRouter };
 ```
 
-## 7 
+## 6
 Rename method
 
 ```typescript
-	private static _addWhereClause(query: Query, where?: Object) {
+  static _addWhereClause(query: Query, where?: Object) {
+```
+
+## 7
+Introduce factory
+```typescript
+import express, { Express } from 'express';
+import cors from 'cors';
+import { NODE_ENV } from '@config/env';
+import errorHandler from '@middlewares/errorHandler';
+import log from '@middlewares/log';
+
+class HttpFactory {
+  static createServer(addRouters: (server: Express) => void) {
+    const httpServer = express();
+    httpServer.use(log);
+    if (NODE_ENV === 'development') {
+      httpServer.use(cors());
+    }
+    httpServer.use(express.json());
+    addRouters(httpServer);
+    httpServer.use(errorHandler);
+    return httpServer;
+  }
+}
+
+export { HttpFactory };
 ```

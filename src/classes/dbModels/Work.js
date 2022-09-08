@@ -9,7 +9,7 @@ class Work extends Model {
 			SELECT "startDate", "finishDate", "activityId", "workTypeId", name AS "workTypeName", works.id FROM works
 			INNER JOIN work_types ON work_types.id = "workTypeId"
 			`);
-		this._addWhere(query, filter.where);
+		this._addWhereClause(query, filter.where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}

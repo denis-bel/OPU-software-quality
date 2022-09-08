@@ -9,7 +9,7 @@ class UsedTool extends Model {
 			SELECT used_tools.id, count, "activityId", "toolId", name AS "toolName" FROM used_tools
 			INNER JOIN tools ON "toolId" = tools.id
 			`);
-		this._addWhere(query, filter.where);
+		this._addWhereClause(query, filter.where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}

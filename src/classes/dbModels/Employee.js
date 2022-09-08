@@ -22,7 +22,7 @@ class Employee extends Model {
 	static async findWithBrigadeName(filter = {}) {
 		const query = new Query();
 		query.add(this.query.withBrigadeName);
-		this._addWhere(query, filter.where);
+		this._addWhereClause(query, filter.where);
 		const { rows } = await this._dbClient.query(query.query, query.values);
 		return rows;
 	}
