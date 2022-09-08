@@ -17,6 +17,15 @@ module.exports = {
 		}
 	},
 	'parser': '@babel/eslint-parser',
+	overrides: [
+		{
+			files: ['**/*.ts'],
+			parser: '@typescript-eslint/parser',
+			rules: {
+				'import/no-import-module-exports': 0
+			}
+		}
+	],
 	'rules': {
 		'no-async-promise-executor': 'off',
 		'accessor-pairs': 'off',

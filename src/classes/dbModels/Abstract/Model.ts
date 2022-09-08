@@ -2,6 +2,21 @@ import _ from 'lodash';
 import Query from '@classes/Query';
 import keyValues from '@lib/keyValues';
 import isObjectEmpty from '@lib/isObjectEmpty';
+import type { Pool } from 'pg';
+
+type InitializeData = {
+	tableName: string
+	dbClient: Pool
+	withTimeStamps: boolean
+}
+
+type Filter = {
+	where?: Object
+}
+
+type FindOptions = {
+	orderBy?: string
+}
 
 /**
  * This is abstract class. It represents database table. It provides basic CRUD operations
@@ -9,32 +24,24 @@ import isObjectEmpty from '@lib/isObjectEmpty';
 class Model {
 	/**
 	 * Name of the table
-	 * @type {String}
-	 * @protected
 	 */
-	static _tableName;
+	static _tableName: string;
 	
 	/**
 	 * Client to execute database query
-	 * @type {Pool}
 	 */
-	static _dbClient;
+	static _dbClient: Pool;
 	
 	/**
 	 * If true, createdAt and updatedAt fields will be updated automatically
-	 * @type {Boolean}
-	 * @protected
 	 */
 	static _withTimeStamps = false;
-	
+
+
 	/**
 	 * This method initializes database table model
-	 * @param {Object} data
-	 * @param {String} data.tableName - table mane
-	 * @param {Pool} data.dbClient - client to execute database query
-	 * @param {Boolean} data.withTimeStamps - if true, model will have createdAt and updatedAt fields
 	 */
-	static initialize({ tableName, dbClient, withTimeStamps = false }) {
+	static initialize({ tableName, dbClient, withTimeStamps = false }: InitializeData) {
 		this._tableName = tableName;
 		this._dbClient = dbClient;
 		this._withTimeStamps = withTimeStamps;
@@ -45,7 +52,7 @@ class Model {
 	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object[]>}
 	 */
-	static async findAll(attributes) {
+	static async findAll(attributes: string[]): Promise<Object[]> {
 		const query = `SELECT ${Query.selectAttributes(attributes)}
                    FROM "${this._tableName}"`;
 		const { rows } = await this._dbClient.query(query);
@@ -66,7 +73,7 @@ class Model {
 	 * @param {String} options.orderBy - order by attribute name
 	 * @return {Promise<Object[]>}
 	 */
-	static async find(filter = {}, attributes = [], { orderBy } = {}) {
+	static async find(filter: Filter = {}, attributes: string[] = [], { orderBy }: FindOptions = {}) {
 		const query = new Query();
 		query.add(`SELECT ${Query.selectAttributes(attributes)}
                FROM "${this._tableName}"`);
@@ -85,7 +92,7 @@ class Model {
 	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object|null>}
 	 */
-	static async findOne(filter, attributes) {
+	static async findOne(filter: Filter, attributes: string[]) {
 		const query = new Query();
 		query.add(`SELECT ${Query.selectAttributes(attributes)}
                FROM "${this._tableName}" `);
@@ -104,7 +111,7 @@ class Model {
 	 * @param {String[]} [attributes] - attributes to select
 	 * @return {Promise<Object|null>}
 	 */
-	static async findById(id, attributes) {
+	static async findById(id: string | number, attributes: string[]) {
 		const query = `SELECT ${Query.selectAttributes(attributes)}
                    FROM "${this._tableName}"
                    WHERE id = $1`;
@@ -121,7 +128,7 @@ class Model {
 	 * @param {Object} attributes - attributes
 	 * @return {Promise<Object|null>}
 	 */
-	static async create(attributes) {
+	static async create(attributes: Record<string, any>) {
 		if (this._withTimeStamps) {
 			attributes.createdAt = new Date();
 			attributes.updatedAt = new Date();
@@ -147,13 +154,13 @@ class Model {
 	 * @param {Number|String} id - row id
 	 * @return {Promise<Object>}
 	 */
-	static async updateById(attributes, id) {
+	static async updateById(attributes: Record<string, any>, id: number | string) {
 		if (this._withTimeStamps) {
 			attributes.updatedAt = new Date();
 		}
 		const query = new Query();
 		const { keys, values } = keyValues(attributes);
-		const keyValueQueries = [];
+		const keyValueQueries: string[] = [];
 		keys.forEach((key) => {
 			keyValueQueries.push(`"${key}" = ${query.nextIndex}`);
 		});
@@ -172,7 +179,7 @@ class Model {
 	 * @param {String|Number} id
 	 * @return {Promise<Boolean>} - true if row was deleted
 	 */
-	static async deleteById(id) {
+	static async deleteById(id: string|number) {
 		const query = `DELETE
                    FROM ${this._tableName}
                    WHERE id = $1`;
@@ -180,7 +187,7 @@ class Model {
 		return rowCount !== 0;
 	}
 	
-	static _addWhere(query, where) {
+	static _addWhere(query: Query, where?: Object) {
 		if (!isObjectEmpty(where)) {
 			query.addWhere(_.omitBy(where, _.isUndefined));
 		}
