@@ -16,8 +16,8 @@ abstract class AbstractRouter {
   protected abstract initializeRoutes(): void;
 
   protected wrapRoute(route: Function) {
-    const wrappedRouter = middlewareWrapper(route);
-    return wrappedRouter.bind(this);
+    const boundRoute = route.bind(this);
+    return middlewareWrapper(boundRoute)
   }
 }
 

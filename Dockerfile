@@ -10,4 +10,6 @@ RUN npm i pm2 @babel/cli @babel/node @babel/core @babel/preset-env sequelize-cli
 
 COPY . .
 
+RUN babel src -d dist --extensions ".ts,.js"
+
 CMD ["pm2-runtime", "start", "ecosystem.config.js", "--only", "api"]

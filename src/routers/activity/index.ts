@@ -1,13 +1,21 @@
-import type { Request, Response } from 'express';
+import type { Request, Response, Router } from 'express';
 import authorizeUser from '@middlewares/authorizeUser';
 import Activity from '@classes/dbModels/Activity';
 import UserLog from '@classes/dbModels/UserLog';
 import { HTTP_CODE_BAD_REQUEST, HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
 import { AbstractRouter } from '@routers/AbstractRouter';
+import { ActivityService } from '@routers/activity/activity.service';
 
 type AuthedRequest = Request & { user: { id: string } }
 
-class ActivityRouter extends AbstractRouter{
+class ActivityRouter extends AbstractRouter {
+  private readonly activityService: ActivityService;
+
+  constructor(router: Router) {
+    super(router);
+    this.activityService = new ActivityService();
+  }
+
   protected initializeRoutes() {
     this.router.use(authorizeUser);
     this.router.get('/all', this.wrapRoute(this.getAll));
@@ -18,7 +26,10 @@ class ActivityRouter extends AbstractRouter{
 
   private async getAll(req: Request, res: Response) {
     const { brigadeId, roadObjectId } = req.query;
-    const activities = await Activity.findWithInclude({ where: { brigadeId, roadObjectId } });
+    if (brigadeId && typeof brigadeId !== 'string' || roadObjectId && roadObjectId !== 'string') {
+      return res.status(HTTP_CODE_BAD_REQUEST).send({ message: 'brigadeId and roadObjectId must be strings' });
+    }
+    const activities = await this.activityService.getAll({ brigadeId, roadObjectId });
     res.json({ activities });
   }
 
