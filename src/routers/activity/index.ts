@@ -1,10 +1,9 @@
 import type { Request, Response, Router } from 'express';
 import authorizeUser from '@middlewares/authorizeUser';
-import Activity from '@classes/dbModels/Activity';
-import UserLog from '@classes/dbModels/UserLog';
-import { HTTP_CODE_BAD_REQUEST, HTTP_CODE_NOT_FOUND, HTTP_CODE_SERVER_ERROR } from '@constants/httpCode';
+import { HTTP_CODE_BAD_REQUEST } from '@constants/httpCode';
 import { AbstractRouter } from '@routers/AbstractRouter';
 import { ActivityService } from '@routers/activity/activity.service';
+import { HttpError } from '@lib/http-error';
 
 type AuthedRequest = Request & { user: { id: string } }
 
@@ -35,9 +34,11 @@ class ActivityRouter extends AbstractRouter {
 
   private async create(req: AuthedRequest, res: Response) {
     const { startDate, finishDate, brigadeId, roadObjectId } = req.body;
-    const activity = await Activity.create({ startDate, finishDate, brigadeId, roadObjectId });
     const { user } = req;
-    await UserLog.create({ userId: user.id, action: 'Create activity' });
+    const activity = await this.activityService.create({
+      user,
+      activityData: { startDate, finishDate, brigadeId, roadObjectId }
+    });
     res.json({ activity });
   }
 
@@ -48,31 +49,25 @@ class ActivityRouter extends AbstractRouter {
         message: 'Missing id'
       });
     }
-    const activity = await Activity.updateById(data, id);
     const { user } = req;
-    await UserLog.create({ userId: user.id, action: 'Update activity' });
+    const activity = await this.activityService.update(id, { user, activityData: data });
     res.send({ activity });
   }
 
   private async delete(req: AuthedRequest, res: Response) {
     const { id } = req.params;
-    const activity = await Activity.findById(id);
-    if (!activity) {
-      return res.status(HTTP_CODE_NOT_FOUND).json({
-        message: 'Activity not found'
-      });
-    }
-    const isDeleted = await Activity.deleteById(id);
-    if (isDeleted) {
-      const { user } = req;
-      await UserLog.create({ userId: user.id, action: 'Delete activity' });
+    const { user } = req;
+    try {
+      await this.activityService.delete(id, user);
       return res.send({
         message: 'Activity was deleted successfully'
       });
-    } else {
-      return res.status(HTTP_CODE_SERVER_ERROR).send({
-        message: 'Error deleting activity'
-      });
+    } catch (error) {
+      if (error instanceof HttpError) {
+        return res.status(error.code).send({ message: error.message });
+      } else {
+        throw error;
+      }
     }
   }
 }
