@@ -4,6 +4,7 @@ import { HTTP_CODE_BAD_REQUEST } from '@constants/httpCode';
 import { AbstractRouter } from '@routers/AbstractRouter';
 import { ActivityService } from '@routers/activity/activity.service';
 import { HttpError } from '@lib/http-error';
+import roleAccess from '@middlewares/roleAccess';
 
 type AuthedRequest = Request & { user: { id: string } }
 
@@ -18,6 +19,7 @@ class ActivityRouter extends AbstractRouter {
   protected initializeRoutes() {
     this.router.use(authorizeUser);
     this.router.get('/all', this.wrapRoute(this.getAll));
+    this.router.use(roleAccess(['admin', 'super-admin']));
     this.router.post('/', this.wrapRoute(this.create));
     this.router.put('/', this.wrapRoute(this.update));
     this.router.delete('/:id', this.wrapRoute(this.delete));
